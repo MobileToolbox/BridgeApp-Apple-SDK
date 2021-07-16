@@ -9,6 +9,7 @@ let package = Package(
     platforms: [
         // Add support for all platforms starting from a specific version.
         .iOS(.v12),
+        .macOS(.v10_15)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
@@ -27,7 +28,7 @@ let package = Package(
             from: "4.1.0"),
         .package(
             name: "BridgeSDK",
-            url: "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
+            url: "https://github.com/MobileToolbox/Bridge-iOS-SDK.git",
             from: "4.4.83"),
         .package(
             name: "JsonModel",
@@ -49,7 +50,7 @@ let package = Package(
                 .process("Localization"),
             ]
             ),
-        
+
         .target(
             name: "BridgeAppUI",
             dependencies: [
