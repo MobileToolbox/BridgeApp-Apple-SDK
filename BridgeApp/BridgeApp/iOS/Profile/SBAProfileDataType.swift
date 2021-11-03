@@ -229,7 +229,7 @@ public enum SBAProfileDataType {
         }
     }
     
-    func defaultAnswerType() -> AnswerType {
+    public func defaultAnswerType() -> AnswerType {
         switch self {
         case .collection(let collectionType, let baseType):
             if collectionType == .singleChoice {

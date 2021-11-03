@@ -340,11 +340,10 @@ public struct SBAProfileItemProfileTableItem: SBAProfileTableItem, Decodable {
     }
     
     /// A mapping of a the choices to the values.
-    public var choices: [RSDChoice]? {
-        // TODO: syoung 10/28/2019 Refactor to allow for choices that map to survey choices.
+    public var choices: [JsonChoice]? {
         return self._choices
     }
-    private let _choices: [RSDChoiceObject<String>]?
+    private let _choices: [JsonChoiceObject]?
     
     /// Current profile item value to apply to, and set from, an edit control.
     public var profileItemValue: Any? {
