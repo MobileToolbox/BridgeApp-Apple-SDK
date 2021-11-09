@@ -78,6 +78,10 @@ class SBAWarningViewController : UIViewController {
         delegate?.removeItem(self)
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

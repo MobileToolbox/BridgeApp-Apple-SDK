@@ -200,6 +200,10 @@ class SBADayTimePickerViewController: UIViewController, UITableViewDelegate, UIT
         self.detailLabel.isHidden = (self.pickerType == .loggedTime)
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
+    }
+    
     var designSystem: RSDDesignSystem? {
         didSet {
             self.tableView?.reloadData()

@@ -96,6 +96,10 @@ class SBAMedicationEditDetailsViewController: UIViewController, UITableViewDeleg
     
     var isFirstAppearance: Bool = true
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if isFirstAppearance {
