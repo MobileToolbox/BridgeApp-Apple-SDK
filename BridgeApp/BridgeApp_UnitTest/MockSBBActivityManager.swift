@@ -1,5 +1,5 @@
 //
-//  MockActivityManager.swift
+//  MockSBBActivityManager.swift
 //  BridgeAppTests
 //
 //  Copyright © 2018 Sage Bionetworks. All rights reserved.
@@ -33,23 +33,24 @@
 
 import Foundation
 import Research
+import BridgeSDK
 @testable import BridgeApp
 
-class MockActivityManager : NSObject, SBBActivityManagerProtocol {
+open class MockSBBActivityManager : NSObject, SBBActivityManagerProtocol {
     
-    var schedules = Array<SBBScheduledActivity>()
+    public var schedules = Array<SBBScheduledActivity>()
     
-    var finishedPersistentSchedules = [SBBScheduledActivity]()
+    public var finishedPersistentSchedules = [SBBScheduledActivity]()
     
-    var guids = Set<GuidMap>()
+    public var guids = Set<GuidMap>()
     
-    struct GuidMap : Hashable {
+    public struct GuidMap : Hashable {
         let identifier : RSDIdentifier
         let activityGuid : String
         let schedulePlanGuid : String
     }
     
-    func createTaskGroup(_ identifier: String, _ activityIdentifiers: [String], _ schedulePlanGuid: String? = nil,_ activityGuidMap: [String : String]? = nil) -> SBAActivityGroupObject {
+    public func createTaskGroup(_ identifier: String, _ activityIdentifiers: [String], _ schedulePlanGuid: String? = nil,_ activityGuidMap: [String : String]? = nil) -> SBAActivityGroupObject {
         let group = SBAActivityGroupObject(identifier: identifier,
                                            title: nil,
                                            journeyTitle: nil,
@@ -85,7 +86,7 @@ class MockActivityManager : NSObject, SBBActivityManagerProtocol {
         return schedule
     }
     
-    private func createSchedule(with identifier: RSDIdentifier, scheduledOn: Date, expiresOn: Date?, finishedOn: Date?, clientData: SBBJSONValue?, schedulePlanGuid: String?, activityGuid: String?, activityType: String) -> SBBScheduledActivity {
+    public func createSchedule(with identifier: RSDIdentifier, scheduledOn: Date, expiresOn: Date?, finishedOn: Date?, clientData: SBBJSONValue?, schedulePlanGuid: String?, activityGuid: String?, activityType: String) -> SBBScheduledActivity {
         
         let guidMap: GuidMap = {
             if schedulePlanGuid != nil && activityGuid != nil {
@@ -152,7 +153,7 @@ class MockActivityManager : NSObject, SBBActivityManagerProtocol {
         return newSchedule
     }
     
-    func addFinishedPersistent(_ scheduledActivities: [SBBScheduledActivity]) {
+    private func addFinishedPersistent(_ scheduledActivities: [SBBScheduledActivity]) {
         let filtered = scheduledActivities.filter { $0.persistentValue && $0.isCompleted }
         self.finishedPersistentSchedules.append(contentsOf: filtered)
     }
@@ -163,7 +164,9 @@ class MockActivityManager : NSObject, SBBActivityManagerProtocol {
         offMainQueue.async {
             
             // add a new schedule for the finished persistent schedules.
-            let _ = self.finishedPersistentSchedules.compactMap { self.createPersistentSchedule(from: $0) }
+            self.finishedPersistentSchedules.forEach {
+                self.createPersistentSchedule(from: $0)
+            }
             self.finishedPersistentSchedules.removeAll()
             
             let predicate = SBBScheduledActivity.availablePredicate(from: scheduledFrom, to: scheduledTo)

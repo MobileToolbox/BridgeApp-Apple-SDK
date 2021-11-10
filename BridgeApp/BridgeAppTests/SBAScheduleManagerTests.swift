@@ -32,13 +32,15 @@
 //
 
 import XCTest
+import BridgeSDK
 @testable import BridgeApp
 import Research
+import BridgeApp_UnitTest
 
 class SBAScheduleManagerTests: XCTestCase {
     
     var scheduleManager: TestScheduleManager!
-    var mockActivityManager: MockActivityManager!
+    var mockActivityManager: MockSBBActivityManager!
     
     override func setUp() {
         super.setUp()
@@ -47,7 +49,8 @@ class SBAScheduleManagerTests: XCTestCase {
         SBABridgeConfiguration.shared = config
         scheduleManager = TestScheduleManager()
         scheduleManager._configuration = config
-        mockActivityManager = MockActivityManager()
+        mockActivityManager = MockSBBActivityManager()
+        scheduleManager._mockActivityManager = mockActivityManager
     }
     
     override func tearDown() {
@@ -125,6 +128,11 @@ class TestScheduleManager : SBAScheduleManager {
     var _configuration: SBABridgeConfiguration?
     override var configuration: SBABridgeConfiguration {
         return _configuration ?? SBABridgeConfiguration.shared
+    }
+    
+    var _mockActivityManager: MockSBBActivityManager?
+    override var activityManager: SBBActivityManagerProtocol {
+        return _mockActivityManager ?? super.activityManager
     }
     
     var nowValue = Date()

@@ -32,6 +32,7 @@
 //
 
 import XCTest
+import BridgeSDK
 @testable import BridgeApp
 
 class SurveyTests: XCTestCase {

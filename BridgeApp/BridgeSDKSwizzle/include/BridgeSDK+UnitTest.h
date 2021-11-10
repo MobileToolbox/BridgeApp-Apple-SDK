@@ -1,8 +1,8 @@
 //
-//  BridgeAppTests-Bridging-Header.h
-//  BridgeAppTests
+//  BridgeSDK+UnitTest.h
+//  
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -31,5 +31,17 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-@import Research_UnitTest;
-@import BridgeSDK_Test;
+@import BridgeSDK;
+
+@interface BridgeSDK (UnitTest)
+
++ (SBBAppConfig * _Nullable)testAppConfig;
++ (void)setTestAppConfig: (SBBAppConfig * _Nonnull)appConfig;
+
++ (id<SBBParticipantManagerProtocol> _Nullable)testParticipantManager;
++ (void)setTestParticipantManager: (id<SBBParticipantManagerProtocol> _Nonnull) manager;
+
++ (id<SBBActivityManagerProtocol> _Nullable)testActivityManager;
++ (void)setTestActivityManager: (id<SBBActivityManagerProtocol> _Nonnull) manager;
+
+@end

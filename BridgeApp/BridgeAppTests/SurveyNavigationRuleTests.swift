@@ -34,6 +34,7 @@
 import XCTest
 import JsonModel
 import Research
+import BridgeSDK
 @testable import BridgeApp
 
 class SurveyNavigationRuleTests: XCTestCase {
@@ -82,7 +83,7 @@ class SurveyNavigationRuleTests: XCTestCase {
         ruleNo.endSurveyValue = true
         constraints.addRulesObject(ruleNo)
         
-        var answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .boolean)
+        let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .boolean)
         var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
         var taskResult = RSDTaskResultObject(identifier: "test")
         
@@ -140,7 +141,7 @@ class SurveyNavigationRuleTests: XCTestCase {
         ruleNo.endSurveyValue = true
         constraints.addRulesObject(ruleNo)
         
-        var answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .string)
+        let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .string)
         var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
         var taskResult = RSDTaskResultObject(identifier: "test")
         
@@ -228,7 +229,7 @@ class SurveyNavigationRuleTests: XCTestCase {
         rule.value = NSNumber(value: 1)
         constraints.addRulesObject(rule)
         
-        var answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .integer)
+        let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .integer)
         var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
         var taskResult = RSDTaskResultObject(identifier: "test")
         
@@ -262,7 +263,7 @@ class SurveyNavigationRuleTests: XCTestCase {
         rule.value = NSNumber(value: 1)
         constraints.addRulesObject(rule)
         
-        var answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .integer)
+        let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .integer)
         var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
         var taskResult = RSDTaskResultObject(identifier: "test")
         

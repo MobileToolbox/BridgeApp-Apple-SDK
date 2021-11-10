@@ -33,6 +33,7 @@
 
 import XCTest
 import Research
+import BridgeSDK
 @testable import BridgeApp
 
 class ScheduleFilteringTests: SBAScheduleManagerTests {
@@ -300,7 +301,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "test")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = RSDTaskObject(identifier: "test", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
+        let task = AssessmentTaskObject(identifier: "test", steps: [step])
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "test",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -343,7 +344,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "test")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = RSDTaskObject(identifier: "test", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
+        let task = AssessmentTaskObject(identifier: "test", steps: [step])
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "test",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -394,7 +395,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "taskC")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = RSDTaskObject(identifier: "taskC", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
+        let task = AssessmentTaskObject(identifier: "taskC", steps: [step])
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "taskC",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -415,7 +416,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "test")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = RSDTaskObject(identifier: "test", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
+        let task = AssessmentTaskObject(identifier: "test", steps: [step])
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "test",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -450,9 +451,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         scheduleManager.loadScheduledActivities()
-        waitForExpectations(timeout: 2) { (err) in
-            print(String(describing: err))
-        }
+        wait(for: [expect], timeout: 2)
         
         XCTAssertNil(scheduleManager.updateFailed_error)
         XCTAssertNotNil(scheduleManager.update_fetchedActivities)
@@ -467,10 +466,8 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         scheduleManager.loadScheduledActivities()
-        waitForExpectations(timeout: 2) { (err) in
-            print(String(describing: err))
-        }
-        
+        wait(for: [expect], timeout: 2)
+
         XCTAssertNil(scheduleManager.updateFailed_error)
         XCTAssertNotNil(scheduleManager.update_fetchedActivities)
     }
@@ -484,10 +481,8 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         scheduleManager.loadScheduledActivities()
-        waitForExpectations(timeout: 2) { (err) in
-            print(String(describing: err))
-        }
-        
+        wait(for: [expect], timeout: 2)
+
         XCTAssertNil(scheduleManager.updateFailed_error)
         XCTAssertNotNil(scheduleManager.update_fetchedActivities)
     }

@@ -32,6 +32,8 @@
 //
 
 import XCTest
+import BridgeSDK
+@testable import Research_UnitTest
 @testable import BridgeApp
 @testable import Research
 import JsonModel
@@ -428,9 +430,8 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         let _ = taskController.test_stepTo("completion")
-        waitForExpectations(timeout: 2) { (err) in
-            XCTAssertNil(err)
-        }
+        wait(for: [expect], timeout: 2)
+        
         XCTAssertNotNil(taskController.handleTaskResultReady_calledWith)
         
         // Now, build the reports
@@ -520,9 +521,8 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         let _ = taskController.test_stepTo("completion")
-        waitForExpectations(timeout: 2) { (err) in
-            XCTAssertNil(err)
-        }
+        wait(for: [expect], timeout: 2)
+
         XCTAssertNotNil(taskController.handleTaskResultReady_calledWith)
         
         // Now, build the reports

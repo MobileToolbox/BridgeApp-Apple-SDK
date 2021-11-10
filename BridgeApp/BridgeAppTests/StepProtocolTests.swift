@@ -34,6 +34,8 @@
 import XCTest
 import JsonModel
 import MobilePassiveData
+import BridgeSDK
+import Research
 @testable import BridgeApp
 
 class StepProtocolTests: XCTestCase {
@@ -101,7 +103,7 @@ class StepProtocolTests: XCTestCase {
         XCTAssertNil(inputStep.shouldHideAction(for: .navigation(.skip), on: inputStep))
         XCTAssertNil(inputStep.viewTheme)
         XCTAssertNil(inputStep.colorMapping)
-        XCTAssertEqual(inputStep.stepType, .form)
+        XCTAssertEqual(inputStep.stepType, .bridgeV1SurveyQuestion)
         XCTAssertTrue(inputStep.instantiateStepResult() is RSDCollectionResultObject)
         XCTAssertTrue(inputStep.isOptional)
     }
@@ -171,13 +173,13 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertEqual(surveyStep.title, "Title")
-        XCTAssertEqual(surveyStep.text, "Text")
+        XCTAssertEqual(surveyStep.subtitle, "Text")
         XCTAssertEqual(surveyStep.detail, "Detail")
         
         let copy = inputStep.copy(with: "xyz")
         XCTAssertEqual(copy.identifier, "xyz")
         XCTAssertEqual(copy.title, "Title")
-        XCTAssertEqual(copy.text, "Text")
+        XCTAssertEqual(copy.subtitle, "Text")
         XCTAssertEqual(copy.detail, "Detail")
     }
     
@@ -190,7 +192,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -210,7 +212,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -306,7 +308,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -361,7 +363,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -452,7 +454,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -506,7 +508,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -593,7 +595,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -629,7 +631,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -664,7 +666,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -698,7 +700,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -739,7 +741,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -776,7 +778,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -797,7 +799,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -822,7 +824,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep
@@ -915,7 +917,7 @@ class StepProtocolTests: XCTestCase {
         let surveyStep = inputStep
         XCTAssertEqual(surveyStep.identifier, "abc123")
         XCTAssertNil(surveyStep.title)
-        XCTAssertEqual(surveyStep.text, "Question prompt")
+        XCTAssertEqual(surveyStep.subtitle, "Question prompt")
         XCTAssertEqual(surveyStep.detail, "Question prompt detail")
         
         let inputField = inputStep

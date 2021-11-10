@@ -33,7 +33,15 @@
 
 import XCTest
 import Research
+import BridgeSDK
 @testable import BridgeApp
+import BridgeApp_UnitTest
+
+let testHarness = BridgeTestHarness(.module)
+
+func setupTestHarness() {
+    testHarness.setupBridgeIfNeeded()
+}
 
 let testFactory: RSDFactory = {
     RSDFactory.shared = SBAFactory()

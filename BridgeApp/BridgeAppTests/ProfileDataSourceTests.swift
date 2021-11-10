@@ -33,6 +33,7 @@
 
 import XCTest
 import Research
+import BridgeSDK
 @testable import BridgeApp
 
 class ProfileDataSourceTests: XCTestCase {
@@ -44,6 +45,8 @@ class ProfileDataSourceTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
+        
+        setupTestHarness()
     }
 
     override func tearDown() {

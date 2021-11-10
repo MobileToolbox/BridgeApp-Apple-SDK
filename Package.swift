@@ -18,6 +18,9 @@ let package = Package(
         .library(
             name: "BridgeAppUI",
             targets: ["BridgeAppUI"]),
+        .library(
+            name: "BridgeApp_UnitTest",
+            targets: ["BridgeApp_UnitTest"]),
 //        .library(
 //            name: "DataTracking",
 //            targets: ["DataTracking"]),
@@ -32,7 +35,7 @@ let package = Package(
         .package(
             name: "BridgeSDK",
             url: "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
-            from: "4.4.83"),
+            from: "4.4.85"),
         .package(
             name: "JsonModel",
             url: "https://github.com/Sage-Bionetworks/JsonModel-Swift.git",
@@ -52,13 +55,7 @@ let package = Package(
             resources: [
                 .process("Localization"),
             ]),
-        .testTarget(name: "BridgeAppTests",
-                    dependencies: [
-                        "BridgeApp",
-                        .product(name: "Research_UnitTest", package: "SageResearch"),
-                    ],
-                    path:"BridgeApp/BridgeAppTests"),
-        
+
         .target(
             name: "BridgeAppUI",
             dependencies: [
@@ -71,6 +68,29 @@ let package = Package(
             resources: [
                 .process("Resources"),
             ]),
+        
+        .testTarget(name: "BridgeAppTests",
+                    dependencies: [
+                        "BridgeApp",
+                        "BridgeApp_UnitTest",
+                        .product(name: "Research_UnitTest", package: "SageResearch"),
+                    ],
+                    path:"BridgeApp/BridgeAppTests",
+                    resources: [
+                        .process("Resources"),
+                    ]),
+        
+        .target(name: "BridgeApp_UnitTest",
+                dependencies: [
+                    "BridgeApp",
+                    "BridgeSDK",
+                    "BridgeSDKSwizzle",
+                ],
+                path: "BridgeApp/BridgeApp_UnitTest"),
+    
+        .target(name: "BridgeSDKSwizzle",
+                dependencies: ["BridgeSDK"],
+                path: "BridgeApp/BridgeSDKSwizzle/"),
         
 //        .target(name: "DataTracking",
 //                dependencies: [

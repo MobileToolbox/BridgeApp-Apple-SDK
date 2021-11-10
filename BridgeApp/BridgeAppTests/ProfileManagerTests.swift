@@ -32,6 +32,7 @@
 //
 
 import XCTest
+import BridgeSDK
 @testable import BridgeApp
 
 class ProfileManagerTests: XCTestCase {
@@ -49,6 +50,8 @@ class ProfileManagerTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
+        
+        setupTestHarness()
     }
 
     override func tearDown() {
