@@ -146,7 +146,7 @@ open class SBATrackedLoggingDataSource : SBATrackingDataSource, RSDModalStepData
     }
     
     /// Build the answer object appropriate to this tracked logging item.
-    open func buildAnswer(for loggingItem: SBATrackedLoggingTableItem) -> RSDResult {
+    open func buildAnswer(for loggingItem: SBATrackedLoggingTableItem) -> ResultData {
         var loggedResult = SBATrackedLoggingResultObject(identifier: loggingItem.identifier, text: loggingItem.title, detail: loggingItem.detail)
         loggedResult.itemIdentifier = loggingItem.itemIdentifier
         loggedResult.timingIdentifier = loggingItem.timingIdentifier
@@ -187,7 +187,7 @@ open class SBATrackedLoggingDataSource : SBATrackingDataSource, RSDModalStepData
         return step
     }
     
-    open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> RSDResult? {
+    open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> ResultData? {
         return self.trackingResult().copy(with: step.identifier)
     }
     

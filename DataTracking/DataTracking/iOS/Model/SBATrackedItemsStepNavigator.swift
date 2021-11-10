@@ -123,7 +123,7 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
     }
     
     /// Not used. Always return `false`.
-    open func shouldSkipStep(_ step: RSDStep) -> (shouldSkip: Bool, stepResult: RSDResult?) {
+    open func shouldSkipStep(_ step: RSDStep) -> (shouldSkip: Bool, stepResult: ResultData?) {
         return (false, nil)
     }
     

@@ -131,7 +131,7 @@ open class SBATrackedReminderModalButtonCell : RSDButtonCell {
     }
 }
 
-extension RSDResult {
+extension ResultData {
     
     func firstAnswerResult() -> RSDAnswerResult? {
         return ((self as? RSDCollectionResult)?.inputResults.first ?? self) as? RSDAnswerResult

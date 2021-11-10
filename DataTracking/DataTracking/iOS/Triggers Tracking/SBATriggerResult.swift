@@ -35,7 +35,7 @@ import Foundation
 import JsonModel
 import Research
 
-public struct SBATriggerResult : RSDResult, Codable, RSDScoringResult {
+public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
     public let type: RSDResultType = .trigger
     
     private enum CodingKeys : String, CodingKey {
@@ -131,7 +131,7 @@ public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
     public var triggerResults: [SBATriggerResult] = []
     
     /// A wrapper for the codable results.
-    public var inputResults: [RSDResult] {
+    public var inputResults: [ResultData] {
         get {
             return triggerResults
         }

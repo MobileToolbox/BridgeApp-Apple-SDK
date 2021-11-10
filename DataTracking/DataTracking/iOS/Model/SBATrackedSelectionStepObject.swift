@@ -160,7 +160,7 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     /// copy of the result with this step's identifier.
     ///
     /// - returns: A result for this step.
-    open override func instantiateStepResult() -> RSDResult {
+    open override func instantiateStepResult() -> ResultData {
         guard let result = self.result else {
             return SBATrackedItemsResultObject(identifier: self.identifier)
         }
@@ -348,7 +348,7 @@ public struct SBATrackedItemsResultObject : SBATrackedItemsResult, Codable, RSDN
         self.items = sort(selectedIdentifiers, with: items).map { RSDIdentifier(rawValue: $0) }
     }
     
-    mutating public func updateDetails(from result: RSDResult) {
+    mutating public func updateDetails(from result: ResultData) {
         // Do nothing
     }
 }

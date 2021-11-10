@@ -72,7 +72,7 @@ open class SBATrackedItemsLoggingStepObject : SBATrackedSelectionStepObject {
     }
     
     /// Override to return a collection result that is pre-populated with the a new set of logging objects.
-    override open func instantiateStepResult() -> RSDResult {
+    override open func instantiateStepResult() -> ResultData {
         var collectionResult = SBATrackedLoggingCollectionResultObject(identifier: self.identifier)
         collectionResult.updateSelected(to: self.result?.selectedAnswers.map { $0.identifier }, with: self.items)
         return collectionResult
@@ -110,7 +110,7 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
     public var loggingItems: [SBATrackedLoggingResultObject]
     
     // The input results are the logging items.
-    public var inputResults: [RSDResult] {
+    public var inputResults: [ResultData] {
         get {
             return loggingItems
         }
@@ -158,8 +158,8 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
         self.loggingItems = results
     }
     
-    /// Update the details to the new value. This is only valid for a new value that is an `RSDResult`.
-    public mutating func updateDetails(from result: RSDResult) {
+    /// Update the details to the new value. This is only valid for a new value that is an `ResultData`.
+    public mutating func updateDetails(from result: ResultData) {
         if let loggingResult = result as? SBATrackedLoggingResultObject {
             self.appendInputResults(with: loggingResult)
         }
@@ -249,7 +249,7 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
     
     /// The list of input results associated with this step. These are generally assumed to be answers to
     /// field inputs, but they are not required to implement the `RSDAnswerResult` protocol.
-    public var inputResults: [RSDResult]
+    public var inputResults: [ResultData]
     
     /// Default initializer for this object.
     ///
@@ -360,7 +360,7 @@ extension SBATrackedLoggingResultObject : SBATrackedItemAnswer {
         return nil
     }
     
-    public func isEqualToResult(_ result: RSDResult?) -> Bool {
+    public func isEqualToResult(_ result: ResultData?) -> Bool {
         return self.identifier == result?.identifier
     }
 }

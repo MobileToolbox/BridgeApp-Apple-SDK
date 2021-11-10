@@ -548,7 +548,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         self.medications = meds
     }
     
-    mutating public func updateDetails(from result: RSDResult) {
+    mutating public func updateDetails(from result: ResultData) {
         if let medsResult = result as? SBAMedicationTrackingResult {
             self.medications = medsResult.medications
         }
@@ -620,7 +620,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         self.medications.insert(medication, at: idx)
     }
     
-    mutating func updateReminders(from result: RSDResult) {
+    mutating func updateReminders(from result: ResultData) {
         let aResult = ((result as? RSDCollectionResult)?.inputResults.first ?? result) as? RSDAnswerResult
         if let array = aResult?.value as? [Int] {
             self.reminders = array

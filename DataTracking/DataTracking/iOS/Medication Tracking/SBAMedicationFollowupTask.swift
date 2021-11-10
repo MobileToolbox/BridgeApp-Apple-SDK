@@ -125,7 +125,7 @@ extension SBAMedicationFollowupTask {
     }
     
     /// Not used. Always return `false`.
-    public func shouldSkipStep(_ step: RSDStep) -> (shouldSkip: Bool, stepResult: RSDResult?) {
+    public func shouldSkipStep(_ step: RSDStep) -> (shouldSkip: Bool, stepResult: ResultData?) {
         return (false, nil)
     }
 }

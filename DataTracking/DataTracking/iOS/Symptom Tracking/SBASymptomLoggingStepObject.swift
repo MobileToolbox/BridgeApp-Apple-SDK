@@ -83,7 +83,7 @@ open class SBASymptomLoggingDataSource : SBATrackedLoggingDataSource {
         return formStep
     }
     
-    override open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> RSDResult? {
+    override open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> ResultData? {
         guard let symptomItem = tableItem as? SBASymptomTableItem else {
             return super.previousResult(for: tableItem, with: step)
         }
@@ -163,7 +163,7 @@ public enum SBASymptomDurationLevel : Int, Codable {
         "DURATION_CHOICE_ALL_NIGHT"
     ]
     
-    public init?(result: RSDResult) {
+    public init?(result: ResultData) {
         guard let answerResult = result as? RSDAnswerResult else { return nil }
         if let value = answerResult.value as? SBASymptomDurationLevel {
             self = value
@@ -271,7 +271,7 @@ extension SBASymptomDurationLevel : RSDChoice {
         return nil
     }
     
-    public func isEqualToResult(_ result: RSDResult?) -> Bool {
+    public func isEqualToResult(_ result: ResultData?) -> Bool {
         guard let aResult = result, let level = SBASymptomDurationLevel(result: aResult) else { return false }
         return level == self
     }
@@ -517,7 +517,7 @@ public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
     public var symptomResults: [SBASymptomResult] = []
     
     /// A wrapper for the input results.
-    public var inputResults: [RSDResult] {
+    public var inputResults: [ResultData] {
         get {
             return symptomResults
         }

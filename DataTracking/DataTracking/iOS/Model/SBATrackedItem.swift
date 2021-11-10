@@ -101,7 +101,7 @@ public protocol SBATrackedItemAnswer : Codable, RSDChoice {
 }
 
 /// The tracked items result includes a list of all the answers for this tracked selection.
-public protocol SBATrackedItemsResult : RSDResult, RSDCopyWithIdentifier {
+public protocol SBATrackedItemsResult : ResultData, RSDCopyWithIdentifier {
     
     /// A list of the currently selected items including any tracked details.
     var selectedAnswers: [SBATrackedItemAnswer] { get }
@@ -110,7 +110,7 @@ public protocol SBATrackedItemsResult : RSDResult, RSDCopyWithIdentifier {
     mutating func updateSelected(to selectedIdentifiers: [String]?, with items: [SBATrackedItem])
     
     /// Update the result from the given task result and items.
-    mutating func updateDetails(from result: RSDResult)
+    mutating func updateDetails(from result: ResultData)
 }
 
 extension SBATrackedItemsResult {
