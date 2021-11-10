@@ -98,7 +98,7 @@ open class SBAScheduledActivityArchive: SBBDataArchive, RSDDataArchive {
     
     /// Get the archivable object for the given result.
     open func archivableData(for result: ResultData, sectionIdentifier: String?, stepPath: String?) -> RSDArchivable? {
-        if self.usesV1LegacySchema, let answerResult = result as? AnswerResultObject {
+        if self.usesV1LegacySchema, let answerResult = result as? RSDAnswerResult {
             return SBAAnswerResultWrapper(sectionIdentifier: sectionIdentifier, result: answerResult)
         }
         else if let archivable = result as? RSDArchivable {
@@ -190,7 +190,7 @@ private let kNumericResultUnitKey = "unit"
 struct SBAAnswerResultWrapper : RSDArchivable {
     
     let sectionIdentifier : String?
-    let result : AnswerResultObject
+    let result : RSDAnswerResult
 
     var identifier: String {
         if let section = sectionIdentifier {
@@ -208,14 +208,14 @@ struct SBAAnswerResultWrapper : RSDArchivable {
         let item = bridgifyFilename(self.identifier)
 
         json[kIdentifierKey] = result.identifier
-        json[kStartDateKey] = result.startDate
-        json[kEndDateKey] = result.endDate
+        json[kStartDateKey]  = result.startDate
+        json[kEndDateKey]    = result.endDate
         json[kItemKey] = item
-        if let answer = result.jsonValue?.jsonObject() {
-            json[result.bridgeAnswerKey] = answer
+        if let answer = (result.value as? JsonValue)?.jsonObject() {
+            json[result.answerType.bridgeAnswerKey] = answer
             json[kQuestionResultSurveyAnswerKey] = answer
-            json[kQuestionResultQuestionTypeKey] = result.bridgeAnswerType
-            if let unit = (result.jsonAnswerType as? AnswerTypeMeasurement)?.unit {
+            json[kQuestionResultQuestionTypeKey] = result.answerType.bridgeAnswerType
+            if let unit = result.answerType.unit {
                 json[kNumericResultUnitKey] = unit
             }
         }
@@ -227,64 +227,63 @@ struct SBAAnswerResultWrapper : RSDArchivable {
     }
 }
 
-extension AnswerResultObject {
+extension RSDAnswerResultType {
 
     var bridgeAnswerType: String {
-        guard let questionData = self.questionData,
-            case .object(let dictionary) = questionData,
-            let constraintsType = dictionary[kConstraintsType] as? String,
-            let dataType = dictionary[kConstraintsDataType] as? String
-            else {
-                return "Text"
+        guard self.sequenceType == nil else {
+            return "MultipleChoice"
         }
-        
-        if constraintsType == SBBMultiValueConstraints().type {
-            return (self.jsonAnswerType is AnswerTypeArray) ? "MultipleChoice" : "SingleChoice"
+
+        if let dataType = self.formDataType,
+            case .collection(let collectionType, _) = dataType,
+            collectionType == .singleChoice {
+            return "SingleChoice"
         }
-        else {
-            switch SBBDataType(rawValue: dataType) {
-            case .boolean:
-                return "Boolean"
-            case .integer:
-                return "Integer"
-            case .decimal, .duration, .height, .weight:
-                return "Decimal"
-            case .date, .dateTime:
-                return "Date"
-            case .time:
+
+        switch self.baseType {
+        case .boolean:
+            return "Boolean"
+        case .string, .data, .codable:
+            return "Text"
+        case .integer:
+            return "Integer"
+        case .decimal:
+            return "Decimal"
+        case .date:
+            if self.dateFormat == "HH:mm:ss" || self.dateFormat == "HH:mm" {
                 return "TimeOfDay"
-            default:
-                return "Text"
+            } else {
+                return "Date"
             }
         }
     }
 
     var bridgeAnswerKey: String {
-        guard let questionData = self.questionData,
-            case .object(let dictionary) = questionData,
-            let constraintsType = dictionary[kConstraintsType] as? String,
-            let dataType = dictionary[kConstraintsDataType] as? String
-            else {
-                return "textAnswer"
-        }
-        
-        if constraintsType == SBBMultiValueConstraints().type {
+        guard self.sequenceType == nil else {
             return "choiceAnswers"
         }
-        else {
-            switch SBBDataType(rawValue: dataType) {
-            case .boolean:
-                return "booleanAnswer"
-            case .integer, .decimal, .duration, .height, .weight:
-                return "numericAnswer"
-            case .date, .dateTime:
-                return "dateAnswer"
-            case .time:
+
+        if let dataType = self.formDataType,
+            case .collection(let collectionType, _) = dataType,
+            collectionType == .singleChoice {
+            return "choiceAnswers"
+        }
+
+        switch self.baseType {
+        case .boolean:
+            return "booleanAnswer"
+        case .string, .data, .codable:
+            return "textAnswer"
+        case .integer, .decimal:
+            return "numericAnswer"
+        case .date:
+            if self.dateFormat == "HH:mm:ss" || self.dateFormat == "HH:mm" {
                 return "dateComponentsAnswer"
-            default:
-                return "textAnswer"
+            } else {
+                return "dateAnswer"
             }
         }
+
     }
 }
 
