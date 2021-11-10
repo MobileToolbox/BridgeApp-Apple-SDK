@@ -18,6 +18,9 @@ let package = Package(
         .library(
             name: "BridgeAppUI",
             targets: ["BridgeAppUI"]),
+        .library(
+            name: "DataTracking",
+            targets: ["DataTracking"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -62,6 +65,19 @@ let package = Package(
             resources: [
                 .process("Resources"),
             ]
+            ),
+        
+        .target(name: "DataTracking",
+                dependencies: [
+                    .product(name: "Research", package: "SageResearch"),
+                    .product(name: "ResearchUI", package: "SageResearch"),
+                    "BridgeApp",
+                    "BridgeAppUI",
+                ],
+                path: "DataTracking/DataTracking/iOS",
+                resources: [
+                    .process("Resources"),
+                ]
             ),
     ]
 )
