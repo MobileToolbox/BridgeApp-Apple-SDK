@@ -37,7 +37,7 @@ import BridgeSDK
 import JsonModel
 import Research
 
-public protocol SBAProfileItem: class, Decodable {
+public protocol SBAProfileItem: AnyObject, Decodable {
     
     /// profileKey is used to access a specific profile item, and so must be unique across all SBAProfileItems
     /// within an app.
