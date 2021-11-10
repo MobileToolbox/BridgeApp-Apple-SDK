@@ -36,6 +36,10 @@ import BridgeSDK
 import JsonModel
 import Research
 
+extension RSDStepType {
+    public static let bridgeV1SurveyQuestion: RSDStepType = "bridgeV1SurveyQuestion"
+}
+
 /// `SBASurveyConfiguration` is a survey wrapper that can extend the default implementation
 /// of UI/UX handling for all the Bridge surveys used by a given app.
 open class SBASurveyConfiguration {
@@ -61,7 +65,7 @@ open class SBASurveyConfiguration {
         if let stepType = stepTypeMap[step.guid] {
             return stepType
         } else if step is SBBSurveyQuestion {
-            return .form
+            return .bridgeV1SurveyQuestion
         } else {
             return .instruction
         }

@@ -1,8 +1,8 @@
 //
-//  RSDFormUIStep.swift
+//  RSDInputFieldTableItem.swift
 //  Research
 //
-//  Copyright © 2017-2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2017-2020 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -33,26 +33,37 @@
 
 import Foundation
 import Research
-import JsonModel
 
-/// `RSDFormUIStep` implements additional properties used in creating a form input.
-public protocol RSDFormUIStep: RSDTableStep {
+/// `RSDInputFieldTableItem` is an abstract base class implementation for representing an answer, or part of an
+/// answer, for a given `RSDInputField`.
+open class RSDInputFieldTableItem : RSDTableItem {
     
-    /// The `inputFields` array is used to hold a logical subgrouping of input fields. If this array holds
-    /// more than one input field, those fields should describe an input that is uses a logical subgrouping
-    /// such as birth month/year or given/family name.
-    var inputFields: [RSDInputField] { get }
-}
-
-extension RSDFormUIStep {
+    /// The RSDInputField representing this tableItem.
+    public let inputField: RSDInputField
     
-    /// Look to the input fields and return true if any are choice type that include an image.
-    public var hasImageChoices: Bool {
-        for item in inputFields {
-            if let picker = item.pickerSource as? RSDChoiceOptions, picker.hasImages {
-                return true
-            }
-        }
-        return false
+    /// The UI hint for displaying the component of the item group.
+    public let uiHint: RSDFormUIHint
+    
+    /// The answer associated with this table item component. Base class returns `nil`.
+    open var answer: Any? {
+        return nil
+    }
+    
+    /// Initialize a new RSDInputFieldTableItem.
+    /// parameters:
+    ///     - rowIndex:      The index of this item relative to all rows in the section in which this item resides.
+    ///     - inputField:    The RSDInputField representing this tableItem.
+    ///     - uiHint: The UI hint for this row of the table.
+    ///     - reuseIdentifier: The string to use as the reuse identifier.
+    ///     - identifier: The cell identifier. If `nil`, then the inputField identifier will be used.
+    public init(rowIndex: Int, inputField: RSDInputField, uiHint: RSDFormUIHint, reuseIdentifier: String? = nil, identifier: String? = nil) {
+        self.inputField = inputField
+        self.uiHint = uiHint
+        
+        // If the reuse identifier isn't passed to the initializer then set it from the ui hint.
+        let reuseId: String = reuseIdentifier ?? uiHint.stringValue
+        let itemId: String = identifier ?? inputField.identifier
+        
+        super.init(identifier: itemId, rowIndex: rowIndex, reuseIdentifier: reuseId)
     }
 }

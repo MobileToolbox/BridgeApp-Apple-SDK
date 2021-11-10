@@ -121,10 +121,14 @@ extension SBBSurveyQuestion : RSDDesignableUIStep {
 }
 
 extension SBBSurveyQuestion : RSDFormUIStep {
-    
+
     /// `SBBSurveyQuestion` only supports a single input field per step.
     public var inputFields: [RSDInputField] {
         return [self]
+    }
+    
+    public func instantiateDataSource(with parent: RSDPathComponent?, for supportedHints: Set<RSDFormUIHint>) -> RSDTableDataSource? {
+        RSDFormStepDataSourceObject(step: self, parent: parent, supportedHints: supportedHints)
     }
 }
 

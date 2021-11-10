@@ -27,7 +27,8 @@ let package = Package(
         .package(
             name: "SageResearch",
             url: "https://github.com/Sage-Bionetworks/SageResearch.git",
-            from: "4.1.0"),
+            .branch("fix-internal-init")),
+            //from: "4.1.0"),
         .package(
             name: "BridgeSDK",
             url: "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
@@ -50,8 +51,13 @@ let package = Package(
             path: "BridgeApp/BridgeApp/iOS",
             resources: [
                 .process("Localization"),
-            ]
-            ),
+            ]),
+        .testTarget(name: "BridgeAppTests",
+                    dependencies: [
+                        "BridgeApp",
+                        .product(name: "Research_UnitTest", package: "SageResearch"),
+                    ],
+                    path:"BridgeApp/BridgeAppTests"),
         
         .target(
             name: "BridgeAppUI",
@@ -64,8 +70,7 @@ let package = Package(
             path: "BridgeApp/BridgeAppUI/iOS",
             resources: [
                 .process("Resources"),
-            ]
-            ),
+            ]),
         
 //        .target(name: "DataTracking",
 //                dependencies: [

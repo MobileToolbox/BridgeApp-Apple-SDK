@@ -32,9 +32,9 @@
         "package": "SageResearch",
         "repositoryURL": "https://github.com/Sage-Bionetworks/SageResearch.git",
         "state": {
-          "branch": null,
-          "revision": "1189cc8ebd10e53e82fca07d9aae2f74a797facd",
-          "version": "4.1.2"
+          "branch": "fix-internal-init",
+          "revision": "2cf70c606cdac5ce5db9d5a2b24a87103037cb1f",
+          "version": null
         }
       }
     ]
