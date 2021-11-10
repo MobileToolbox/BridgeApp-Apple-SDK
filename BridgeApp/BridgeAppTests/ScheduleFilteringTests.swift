@@ -300,7 +300,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "test")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = AssessmentTaskObject(identifier: "test", steps: [step])
+        let task = RSDTaskObject(identifier: "test", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "test",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -343,7 +343,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "test")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = AssessmentTaskObject(identifier: "test", steps: [step])
+        let task = RSDTaskObject(identifier: "test", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "test",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -394,7 +394,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "taskC")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = AssessmentTaskObject(identifier: "taskC", steps: [step])
+        let task = RSDTaskObject(identifier: "taskC", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "taskC",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
@@ -415,7 +415,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
         
         let taskInfo = RSDTaskInfoObject(with: "test")
         let step = RSDUIStepObject(identifier: "introduction")
-        let task = AssessmentTaskObject(identifier: "test", steps: [step])
+        let task = RSDTaskObject(identifier: "test", stepNavigator: RSDConditionalStepNavigatorObject(with: [step]))
         let schema = SBBSchemaReference(dictionaryRepresentation: ["id" : "test",
                                                                    "revision" : NSNumber(value: 3)])!
         SBABridgeConfiguration.shared.addMapping(with: schema)
