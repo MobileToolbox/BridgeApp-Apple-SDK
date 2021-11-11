@@ -35,6 +35,7 @@ import Foundation
 import Research
 import BridgeApp
 import BridgeSDK
+import JsonModel
 
 /// `SBATrackedItem` is a protocol for defining an item that can be mapped using its `identifier`
 /// to a list of selected items.
@@ -171,7 +172,7 @@ extension SBATrackedItemsCollectionResult {
 ///
 /// - note: These steps are used as templates that are retained by the `SBATrackedItemsStepNavigator`
 /// and thus need to be mutable classes.
-public protocol SBATrackedItemsStep : class, RSDStep {
+public protocol SBATrackedItemsStep : AnyObject, RSDStep {
     
     /// The result with the list of selected items.
     var result: SBATrackedItemsResult? { get set }

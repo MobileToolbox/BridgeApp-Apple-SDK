@@ -21,9 +21,9 @@ let package = Package(
         .library(
             name: "BridgeApp_UnitTest",
             targets: ["BridgeApp_UnitTest"]),
-//        .library(
-//            name: "DataTracking",
-//            targets: ["DataTracking"]),
+        .library(
+            name: "DataTracking",
+            targets: ["DataTracking"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -92,17 +92,17 @@ let package = Package(
                 dependencies: ["BridgeSDK"],
                 path: "BridgeApp/BridgeSDKSwizzle/"),
         
-//        .target(name: "DataTracking",
-//                dependencies: [
-//                    .product(name: "Research", package: "SageResearch"),
-//                    .product(name: "ResearchUI", package: "SageResearch"),
-//                    "BridgeApp",
-//                    "BridgeAppUI",
-//                ],
-//                path: "DataTracking/DataTracking/iOS",
-//                resources: [
-//                    .process("Resources"),
-//                ]
-//            ),
+        .target(name: "DataTracking",
+                dependencies: [
+                    .product(name: "Research", package: "SageResearch"),
+                    .product(name: "ResearchUI", package: "SageResearch"),
+                    "BridgeApp",
+                    "BridgeAppUI",
+                ],
+                path: "DataTracking/DataTracking/iOS",
+                resources: [
+                    .process("Resources"),
+                ]
+            ),
     ]
 )
