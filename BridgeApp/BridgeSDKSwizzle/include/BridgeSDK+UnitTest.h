@@ -33,6 +33,14 @@
 
 @import BridgeSDK;
 
+/**
+ Registering mocks using `SBBComponentManager` only appears to work if you are running unit tests
+ with an app set up as the test harness. When setting up unit tests without this, the shared singletons
+ do not get set up correctly. Since there is a bunch of unit tests that are assuming that those singletons
+ are set up, I found that the quickest path to not crashing w/o using BridgeSDK.SBBBridgeTestHarness
+ was to swizzle the getters. (syoung 11/11/2021)
+ */
+
 @interface BridgeSDK (UnitTest)
 
 + (SBBAppConfig * _Nullable)testAppConfig;
