@@ -36,11 +36,11 @@ import JsonModel
 import Research
 import BridgeApp
 
-public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
+public struct SBATriggerResult : SerializableResultData, Codable, RSDScoringResult {
     public let serializableType: SerializableResultType = .trigger
     
     private enum CodingKeys : String, CodingKey {
-        case identifier, loggedDate, text, timeZone
+        case identifier, loggedDate, text, timeZone, serializableType = "type"
     }
     
     public let identifier: String
@@ -99,6 +99,7 @@ public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.identifier, forKey: .identifier)
+        try container.encode(self.serializableType, forKey: .serializableType)
         try container.encode(self.text, forKey: .text)
         if let loggedDate = self.loggedDate {
             let formatter = encoder.factory.timestampFormatter.copy() as! DateFormatter
@@ -116,7 +117,7 @@ public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
 
 
 /// Wrapper for a collection of symptoms as a result.
-public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
+public struct SBATriggerCollectionResult : Codable, RSDCollectionResult, SerializableResultData {
     public let serializableType: SerializableResultType = .triggerCollection
     
     private enum CodingKeys : String, CodingKey {
@@ -147,6 +148,10 @@ public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
     
     public init(identifier: String) {
         self.identifier = identifier
+    }
+    
+    public func deepCopy() -> SBATriggerCollectionResult {
+        self
     }
 }
 

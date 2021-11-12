@@ -430,7 +430,7 @@ extension SBAMedicationAnswer : SBAMedication {
 
 /// A medication tracking result which can be used to track the selected medications and details for each
 /// medication.
-public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionResult, RSDNavigationResult {
+public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionResult, RSDNavigationResult, SerializableResultData {
 
     private enum CodingKeys : String, CodingKey {
         case identifier, serializableType = "type", startDate, endDate, medications = "items", reminders, revision, timeZone
@@ -523,6 +523,10 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         copy.revision = self.revision
         copy.timeZone = self.timeZone
         return copy
+    }
+    
+    public func deepCopy() -> SBAMedicationTrackingResult {
+        self.copy(with: self.identifier)
     }
     
     mutating public func updateSelected(to selectedIdentifiers: [String]?, with items: [SBATrackedItem]) {

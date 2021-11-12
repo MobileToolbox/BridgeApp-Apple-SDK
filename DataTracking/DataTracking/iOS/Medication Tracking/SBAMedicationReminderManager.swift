@@ -210,7 +210,7 @@ open class SBAMedicationReminderManager : SBAScheduleManager, UNUserNotification
                             self.addNotifications(for: medicationResult)
                         }
                     }
-                case .authorized, .provisional:
+                case .authorized, .provisional, .ephemeral:
                     self.addNotifications(for: medicationResult)
                 @unknown default:
                     print("WARNING!! Unknown authorization status is not handled. \(settings.authorizationStatus)")

@@ -36,7 +36,7 @@ import Research
 import ResearchUI
 import UIKit
 
-protocol SBAWarningViewControllerDelegate : class {
+protocol SBAWarningViewControllerDelegate : AnyObject {
     func cancel(_ viewController: SBAWarningViewController)
     func removeItem(_ viewController: SBAWarningViewController)
 }

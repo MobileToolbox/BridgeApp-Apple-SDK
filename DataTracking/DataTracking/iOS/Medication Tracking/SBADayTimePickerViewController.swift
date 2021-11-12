@@ -35,7 +35,7 @@ import UIKit
 import Research
 import ResearchUI
 
-protocol SBADayTimePickerViewControllerDelegate : class {
+protocol SBADayTimePickerViewControllerDelegate : AnyObject {
     func saveSelection(_ picker: SBADayTimePickerViewController)
     func cancel(_ picker: SBADayTimePickerViewController)
 }

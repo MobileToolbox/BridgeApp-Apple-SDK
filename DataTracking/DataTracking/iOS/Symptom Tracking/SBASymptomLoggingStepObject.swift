@@ -302,7 +302,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             return SBASymptomSeverityLevel(rawValue: rawValue)
         }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.severity.rawValue, answerType: .integer)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.severity.rawValue, answerType: .integer)
             answerResult.value = newValue?.rawValue
             loggedResult.appendInputResults(with: answerResult)
             if newValue != nil, loggedResult.loggedDate == nil {
@@ -331,7 +331,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             return SBASymptomDurationLevel(result: result)
         }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.duration.rawValue, answerType: SBASymptomDurationLevel.answerType)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.duration.rawValue, answerType: SBASymptomDurationLevel.answerType)
             answerResult.value = newValue?.answerValue
             loggedResult.appendInputResults(with: answerResult)
         }
@@ -346,7 +346,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             }
             return SBASymptomMedicationTiming(rawValue: rawValue)        }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.medicationTiming.rawValue, answerType: .string)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.medicationTiming.rawValue, answerType: .string)
             answerResult.value = newValue?.rawValue
             loggedResult.appendInputResults(with: answerResult)
         }
@@ -358,7 +358,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             return loggedResult.findAnswerResult(with: ResultIdentifier.notes.rawValue)?.value as? String
         }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.notes.rawValue, answerType: .string)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.notes.rawValue, answerType: .string)
             answerResult.value = newValue
             loggedResult.appendInputResults(with: answerResult)
         }
@@ -376,9 +376,9 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
 }
 
 /// The symptom table item is tracked using the result object.
-public struct SBASymptomResult : Codable, RSDScoringResult {
+public struct SBASymptomResult : Codable, RSDScoringResult, SerializableResultData {
     private enum CodingKeys : String, CodingKey {
-        case identifier, text, loggedDate, timeZone, severity, duration, medicationTiming, notes
+        case identifier, text, loggedDate, timeZone, severity, duration, medicationTiming, notes, serializableType = "type"
     }
     
     public let serializableType: SerializableResultType = .symptom
@@ -480,6 +480,7 @@ public struct SBASymptomResult : Codable, RSDScoringResult {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.identifier, forKey: .identifier)
+        try container.encode(self.serializableType, forKey: .serializableType)
         try container.encode(self.text, forKey: .text)
         if let loggedDate = self.loggedDate {
             let formatter = encoder.factory.timestampFormatter.copy() as! DateFormatter
@@ -495,6 +496,10 @@ public struct SBASymptomResult : Codable, RSDScoringResult {
         try container.encodeIfPresent(self.medicationTiming, forKey: .medicationTiming)
         try container.encodeIfPresent(self.notes, forKey: .notes)
     }
+    
+    public func deepCopy() -> SBASymptomResult {
+        self
+    }
 }
 
 /// Wrapper for the clientData from a report.
@@ -503,7 +508,7 @@ public struct SBASymptomReportData : Codable {
 }
 
 /// Wrapper for a collection of symptoms as a result.
-public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
+public struct SBASymptomCollectionResult : Codable, RSDCollectionResult, SerializableResultData {
     public let serializableType: SerializableResultType = .symptomCollection
     
     private enum CodingKeys : String, CodingKey {
@@ -533,6 +538,10 @@ public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
     
     public init(identifier: String) {
         self.identifier = identifier
+    }
+    
+    public func deepCopy() -> SBASymptomCollectionResult {
+        self
     }
 }
 

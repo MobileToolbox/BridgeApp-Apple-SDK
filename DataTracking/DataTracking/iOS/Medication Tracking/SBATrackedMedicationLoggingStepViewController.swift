@@ -162,7 +162,7 @@ extension SBATrackedMedicationLoggingStepViewController: SBAMedicationLoggingCel
     }
 }
 
-public protocol SBAMedicationLoggingCellDelegate : class, NSObjectProtocol {
+public protocol SBAMedicationLoggingCellDelegate : AnyObject {
     /// Called when the user taps the time button.
     func timeTapped(cell: SBAMedicationLoggingCell)
     func logTapped(cell: SBAMedicationLoggingCell)

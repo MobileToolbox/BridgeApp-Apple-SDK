@@ -34,6 +34,9 @@
 import Foundation
 import UIKit
 import Research
+import ResearchUI
+import BridgeApp
+import BridgeAppUI
 
 /// A step used for review selected medication and their details
 open class SBATrackedMedicationReviewStepObject : SBATrackedSelectionStepObject {
