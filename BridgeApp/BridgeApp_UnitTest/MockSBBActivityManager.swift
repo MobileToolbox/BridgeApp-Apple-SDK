@@ -133,6 +133,7 @@ open class MockSBBActivityManager : NSObject, SBBActivityManagerProtocol {
         return schedule
     }
     
+    @discardableResult
     public func createPersistentSchedule(from schedule: SBBScheduledActivity) -> SBBScheduledActivity? {
         guard let finishedOn = schedule.finishedOn, let activityId = schedule.activityIdentifier else { return nil }
         
