@@ -33,6 +33,7 @@
 
 import Foundation
 import Research
+import ResearchUI
 import JsonModel
 import BridgeApp
 
@@ -76,6 +77,8 @@ extension SerializableResultType {
     public static let medicationDetails: SerializableResultType = "medicationDetails"
 }
 
+fileprivate var _didLoad: Bool = false
+
 open class SBADataTrackingFactory : SBAFactory {
     
     public required init() {
@@ -86,9 +89,23 @@ open class SBADataTrackingFactory : SBAFactory {
         self.stepSerializer.add(SBATrackedItemsLoggingStepObject(identifier: "example", type: nil))
         self.stepSerializer.add(SBASymptomLoggingStepObject(identifier: "example", type: nil))
         self.stepSerializer.add(SBATrackedItemRemindersStepObject(identifier: "example", type: nil))
+        self.stepSerializer.add(SBATrackedMedicationReviewStepObject(identifier: "example", type: nil))
         
         // Add tasks to serializer
         self.taskSerializer.add(SBAMedicationTrackingStepNavigator())
         self.taskSerializer.add(SBATrackedItemsStepNavigator())
+        
+        if !_didLoad {
+            _didLoad = true
+            
+            // Add the localization bundle if this is a first init()
+            let localizationBundle = LocalizationBundle(Bundle.module)
+            Localization.insert(bundle: localizationBundle, at: 1)
+            
+            // Set up the resource loader if its nil.
+            if resourceLoader == nil {
+                resourceLoader = ResourceLoader()
+            }
+        }
     }
 }

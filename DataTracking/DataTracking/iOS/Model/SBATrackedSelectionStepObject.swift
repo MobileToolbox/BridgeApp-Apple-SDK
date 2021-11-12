@@ -67,7 +67,7 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     /// Initializer required for `copy(with:)` implementation.
     public required init(identifier: String, type: RSDStepType?) {
         self.items = []
-        super.init(identifier: identifier, type: type ?? .selection)
+        super.init(identifier: identifier, type: type)
         commonInit()
     }
     
@@ -86,10 +86,10 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     /// - parameters:
     ///     - identifier: A short string that uniquely identifies the step.
     ///     - inputFields: The input fields used to create this step.
-    public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil, type: RSDStepType? = nil) {
+    public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
         self.items = items
         self.sections = sections
-        super.init(identifier: identifier, type: type ?? .selection)
+        super.init(identifier: identifier, type: nil)
         commonInit()
     }
 

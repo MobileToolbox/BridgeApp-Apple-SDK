@@ -98,11 +98,22 @@ let package = Package(
                     .product(name: "ResearchUI", package: "SageResearch"),
                     "BridgeApp",
                     "BridgeAppUI",
+                    "JsonModel",
                 ],
                 path: "DataTracking/DataTracking/iOS",
                 resources: [
                     .process("Resources"),
                 ]
             ),
+        
+        .testTarget(name: "DataTrackingTests",
+                    dependencies: [
+                        "DataTracking",
+                        .product(name: "Research_UnitTest", package: "SageResearch"),
+                    ],
+                    path: "DataTracking/DataTrackingTests",
+                    resources: [
+                        .process("Resources"),
+                    ]),
     ]
 )

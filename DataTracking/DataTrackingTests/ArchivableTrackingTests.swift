@@ -36,6 +36,7 @@ import XCTest
 @testable import DataTracking
 import JsonModel
 import Research
+import BridgeSDK
 
 class ArchivableTrackingTests: XCTestCase {
     
@@ -55,7 +56,7 @@ class ArchivableTrackingTests: XCTestCase {
         var result = SBATrackedLoggingCollectionResultObject(identifier: identifier)
         var loggedResultA = SBATrackedLoggingResultObject(identifier: "itemA", text: "Item A", detail: "a detail")
         loggedResultA.loggedDate = Date().addingTimeInterval(-60)
-        var answerResult = RSDAnswerResultObject(identifier: "foo", answerType: .string)
+        let answerResult = RSDAnswerResultObject(identifier: "foo", answerType: .string)
         answerResult.value = "goo"
         loggedResultA.children = [answerResult]
         let loggedResultB = SBATrackedLoggingResultObject(identifier: "itemB", text: "Item B", detail: "b detail")

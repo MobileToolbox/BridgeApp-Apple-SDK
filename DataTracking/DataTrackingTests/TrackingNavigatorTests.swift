@@ -167,11 +167,7 @@ class TrackingNavigatorTests: XCTestCase {
         """.data(using: .utf8)! // our data in native (JSON) format
         
         do {
-            let task = try decoder.decode(RSDTaskObject.self, from: json)
-            guard task.stepNavigator is SBATrackedItemsStepNavigator else {
-                XCTFail("Failed to decode the step navigator. Exiting.")
-                return nil
-            }
+            let task = try decoder.decode(SBATrackedItemsStepNavigator.self, from: json)
             return RSDTaskViewModel(task: task)
             
         } catch let err {

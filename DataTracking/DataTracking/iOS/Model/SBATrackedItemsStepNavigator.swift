@@ -236,7 +236,7 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
     /// Build the logging step for this tracked data collection. Override to customize the step.
     open class func buildLoggingStep(items: [SBATrackedItem], sections: [SBATrackedSection]?) -> SBATrackedItemsStep {
         let stepId = StepIdentifiers.logging.stringValue
-        return SBATrackedItemsLoggingStepObject(identifier: stepId, items: items, sections: sections, type: .logging)
+        return SBATrackedItemsLoggingStepObject(identifier: stepId, items: items, sections: sections)
     }
     
     /// Build the reminder step for this tracked data collection. Override to customize the step.

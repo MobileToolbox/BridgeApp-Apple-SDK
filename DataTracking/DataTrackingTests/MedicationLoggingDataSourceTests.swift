@@ -129,7 +129,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 10, minute: 5)
         let result = buildMedicationResult(identifier: "review")
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)
@@ -193,7 +193,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 10, minute: 40)
         let result = buildMedicationResult(identifier: "review")
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)
@@ -256,7 +256,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 12, minute: 40)
         let result = buildMedicationResult(identifier: "review")
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)
@@ -334,7 +334,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 20, minute: 40)
         let result = buildMedicationResult(identifier: "review")
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)
@@ -421,7 +421,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 10, minute: 40)
         let result = buildMedicationResult(identifier: "review", medsTaken: buildMondayTimestamps(at: .morning))
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)
@@ -493,7 +493,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 12, minute: 40)
         let result = buildMedicationResult(identifier: "review", medsTaken: buildMondayTimestamps(at: .afternoon))
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)
@@ -560,7 +560,7 @@ class MedicationLoggingDataSourceTests: XCTestCase {
         let timeOfDay = buildDate(weekday: .monday, hour: 20, minute: 40)
         let result = buildMedicationResult(identifier: "review", medsTaken: buildMondayTimestamps(at: .evening))
         let meds = buildMedicationItems()
-        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections, type: .logging)
+        let step = SBAMedicationLoggingStepObject(identifier: "logging", items: meds.items, sections: meds.sections)
         step.result = result
 
         let (sections, _) = SBAMedicationLoggingDataSource.buildLoggingSections(step: step, result: result, timeOfDay: timeOfDay)

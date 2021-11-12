@@ -270,7 +270,7 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         resultFoo.loggedDate = Date()
         let fooValues = [("a", 1), ("b", 2), ("c", 3)]
         resultFoo.children = fooValues.map { (value) -> RSDAnswerResult in
-            var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
+            let answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
         }
@@ -279,7 +279,7 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         resultGoo.loggedDate = Date()
         let gooValues = [("a", 4), ("b", 5), ("c", 6)]
         resultGoo.children = gooValues.map { (value) -> RSDAnswerResult in
-            var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
+            let answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
         }
@@ -326,14 +326,13 @@ class TrackedLoggingDataSourceTests: XCTestCase {
     
     func buildDataSource() -> (RSDTableDataSource, RSDTaskViewModel?)? {
         let (items, sections) = buildMedicationItems()
-        let tracker = SBATrackedItemsStepNavigator(identifier: "Test", items: items, sections: sections)
+        let tracker = SBATrackedItemsStepNavigator(identifier: "loggingTest", items: items, sections: sections)
         var result = SBATrackedLoggingCollectionResultObject(identifier: "selection")
         result.updateSelected(to: ["medA2", "medB1", "medC1"], with: items)
         let dataScore = try! result.dataScore()
         tracker.previousClientData = dataScore?.toClientData()
         
-        let task = RSDTaskObject(identifier: "loggingTest", stepNavigator: tracker)
-        let taskPath = RSDTaskViewModel(task: task)
+        let taskPath = RSDTaskViewModel(task: tracker)
         
         let step = SBATrackedItemsLoggingStepObject(identifier: "logging", items: items, sections: sections)
         step.actions = [.addMore : RSDUIActionObject(buttonTitle: "Edit Items") ]

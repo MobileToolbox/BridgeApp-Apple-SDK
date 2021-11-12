@@ -326,7 +326,7 @@ class MedicationTrackingNavigationTests: XCTestCase {
 
 func remindersResult(reminderStep: SBATrackedItemRemindersStepObject) -> RSDCollectionResultObject {
     var result = RSDCollectionResultObject(identifier: reminderStep.identifier)
-    var answerResult = RSDAnswerResultObject(identifier: reminderStep.identifier,
+    let answerResult = RSDAnswerResultObject(identifier: reminderStep.identifier,
                                              answerType: RSDAnswerResultType(baseType: .integer,
                                                                              sequenceType: .array,
                                                                              formDataType: .collection(.multipleChoice, .integer),

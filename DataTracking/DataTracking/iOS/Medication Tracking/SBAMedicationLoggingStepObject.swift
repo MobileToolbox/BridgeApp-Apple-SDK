@@ -86,8 +86,8 @@ open class SBAMedicationLoggingStepObject : SBATrackedSelectionStepObject {
         _commonInit()
     }
     
-    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil, type: RSDStepType? = nil) {
-        super.init(identifier: identifier, items: items, sections: sections, type: type)
+    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
+        super.init(identifier: identifier, items: items, sections: sections)
         _commonInit()
     }
     

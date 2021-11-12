@@ -41,6 +41,10 @@ import BridgeAppUI
 /// A step used for review selected medication and their details
 open class SBATrackedMedicationReviewStepObject : SBATrackedSelectionStepObject {
     
+    open override class func defaultType() -> RSDStepType {
+        .review
+    }
+    
     #if !os(watchOS)
     /// Override to return a medication tracking review step view controller.
     open func instantiateViewController(with parent: RSDPathComponent?) -> (UIViewController & RSDStepController)? {
@@ -59,8 +63,8 @@ open class SBATrackedMedicationReviewStepObject : SBATrackedSelectionStepObject 
         _commonInit()
     }
     
-    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil, type: RSDStepType? = nil) {
-        super.init(identifier: identifier, items: items, sections: sections, type: type)
+    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
+        super.init(identifier: identifier, items: items, sections: sections)
         _commonInit()
     }
     

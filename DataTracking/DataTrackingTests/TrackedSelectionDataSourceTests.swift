@@ -142,9 +142,8 @@ class TrackedSelectionDataSourceTests: XCTestCase {
     
     func buildDataSource(usingSections: Bool = true) -> RSDTableDataSource? {
         let (items, sections) = buildMedicationItems()
-        let medTracker = SBAMedicationTrackingStepNavigator(identifier: "Test", items: items, sections: usingSections ? sections : nil)
-        let task = RSDTaskObject(identifier: "medication", stepNavigator: medTracker)
-        let taskPath = RSDTaskViewModel(task: task)
+        let medTracker = SBAMedicationTrackingStepNavigator(identifier: "medication", items: items, sections: usingSections ? sections : nil)
+        let taskPath = RSDTaskViewModel(task: medTracker)
         
         guard let selectionStep = medTracker.selectionStep as? SBATrackedSelectionStepObject else {
             XCTFail("Selection step not of expected type. Exiting.")
