@@ -36,6 +36,7 @@ import UIKit
 import JsonModel
 import Research
 import ResearchUI
+import BridgeApp
 
 /// A step used for logging symptoms.
 open class SBASymptomLoggingStepObject : SBATrackedItemsLoggingStepObject {

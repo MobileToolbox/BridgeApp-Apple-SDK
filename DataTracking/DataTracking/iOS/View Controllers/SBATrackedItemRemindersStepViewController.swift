@@ -36,6 +36,7 @@ import UserNotifications
 import Research
 import ResearchUI
 import JsonModel
+import BridgeApp
 
 
 /// `SBATrackedItemRemindersStepViewController` contains a prompt butotn cell that

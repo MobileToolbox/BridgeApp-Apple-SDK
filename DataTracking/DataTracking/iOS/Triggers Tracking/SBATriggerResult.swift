@@ -34,6 +34,7 @@
 import Foundation
 import JsonModel
 import Research
+import BridgeApp
 
 public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
     public let serializableType: SerializableResultType = .trigger
@@ -106,6 +107,10 @@ public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
             try container.encode(loggingString, forKey: .loggedDate)
             try container.encode(self.timeZone.identifier, forKey: .timeZone)
         }
+    }
+    
+    public func deepCopy() -> SBATriggerResult {
+        self
     }
 }
 
