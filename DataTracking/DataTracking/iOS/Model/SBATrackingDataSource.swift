@@ -33,6 +33,7 @@
 
 import Foundation
 import Research
+import BridgeApp
 
 /// `SBATrackingDataSource` is an abstract class for handling shared data tracking.
 open class SBATrackingDataSource : RSDStepViewModel, RSDTableDataSource {

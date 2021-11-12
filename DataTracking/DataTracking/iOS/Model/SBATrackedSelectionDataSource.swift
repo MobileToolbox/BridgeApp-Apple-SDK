@@ -33,7 +33,7 @@
 
 import Foundation
 import Research
-
+import BridgeApp
 
 /// `SBATrackedSelectionDataSource` is a concrete implementation of the `RSDTableDataSource` protocol
 /// that is designed to be used with a `SBATrackedItemsStep`.

@@ -40,6 +40,10 @@ import ResearchUI
 /// A step used for logging symptoms.
 open class SBASymptomLoggingStepObject : SBATrackedItemsLoggingStepObject {
     
+    open override class func defaultType() -> RSDStepType {
+        .symptomLogging
+    }
+    
     #if !os(watchOS)
     /// Override to return a symptom logging step view controller.
     open override func instantiateViewController(with parent: RSDPathComponent?) -> (UIViewController & RSDStepController)? {

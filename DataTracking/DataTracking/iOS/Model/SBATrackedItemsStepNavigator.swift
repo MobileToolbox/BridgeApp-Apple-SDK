@@ -36,11 +36,21 @@ import Research
 import JsonModel
 import BridgeApp
 import BridgeSDK
+import MobilePassiveData
 
 /// `SBATrackedItemsStepNavigator` is a general-purpose navigator designed to be used for selecting tracked
 /// data such as medication, triggers, or symptoms.
-open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTrackingTask {
+open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTrackingTask, SerializableTask, RSDCopyTask {
 
+    open class func defaultType() -> RSDTaskType {
+        .tracking
+    }
+    
+    public let taskType: RSDTaskType
+    public var typeName: String {
+        taskType.rawValue
+    }
+    
     /// Publicly accessible coding keys for the default structure for decoding items and sections.
     public enum ItemsCodingKeys : String, CodingKey {
         case items, sections
@@ -56,7 +66,7 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
     }
     
     private enum TaskCodingKeys : String, CodingKey {
-        case activityIdentifier = "identifier"
+        case activityIdentifier = "identifier", taskType = "type"
     }
     
     /// The activity identifier associated with this tracked items.
@@ -133,12 +143,17 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
     ///     - items: The list of medications.
     ///     - sections: The section items for mapping each medication.
     public required init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
+        self.taskType = Self.defaultType()
         self.activityIdentifier = RSDIdentifier(rawValue: identifier)
-        self.selectionStep = type(of: self).buildSelectionStep(items: items, sections: sections)
-        self.reviewStep = type(of: self).buildReviewStep(items: items, sections: sections)
-        self.loggingStep = type(of: self).buildLoggingStep(items: items, sections: sections)
-        self.reminderStep = type(of: self).buildReminderStep()
-        self.introductionStep = type(of: self).buildIntroductionStep()
+        self.selectionStep = Self.buildSelectionStep(items: items, sections: sections)
+        self.reviewStep = Self.buildReviewStep(items: items, sections: sections)
+        self.loggingStep = Self.buildLoggingStep(items: items, sections: sections)
+        self.reminderStep = Self.buildReminderStep()
+        self.introductionStep = Self.buildIntroductionStep()
+    }
+    
+    convenience init() {
+        self.init(identifier: "example", items: [], sections: nil)
     }
     
     
@@ -150,6 +165,7 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
     public required init(from decoder: Decoder) throws {
         let taskContainer = try decoder.container(keyedBy: TaskCodingKeys.self)
         self.activityIdentifier = try taskContainer.decode(RSDIdentifier.self, forKey: .activityIdentifier)
+        self.taskType = try taskContainer.decode(RSDTaskType.self, forKey: .taskType)
         
         let (items, sections) = try type(of: self).decodeItems(from: decoder)
         
@@ -166,19 +182,14 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
         self.loggingStep = loggingStep!
         
         // Build the decoder optional reminder step
-        var reminderStepDecoded: SBATrackedItemRemindersStepObject?
-        if container.contains(.reminder) {
-            let nestedDecoder = try container.superDecoder(forKey: .reminder)
-            reminderStepDecoded = try decoder.factory.decodeStep(from: nestedDecoder) as? SBATrackedItemRemindersStepObject
-        }
-        let reminderStepBuild = type(of: self).buildReminderStep()
-        self.reminderStep = (reminderStepDecoded ?? reminderStepBuild)?.copy(with: RSDIdentifier.medicationReminders.stringValue)
+        let reminderStepDecoded = try container.decodeIfPresent(SBATrackedItemRemindersStepObject.self, forKey: .reminder)
+        self.reminderStep = (reminderStepDecoded ?? type(of: self).buildReminderStep())?.copy(with: RSDIdentifier.medicationReminders.stringValue)
         
         // Build the decoder optional introduction step
         var introductionStepDecoded: RSDStep?
         if container.contains(.introduction) {
             let nestedDecoder = try container.superDecoder(forKey: .introduction)
-            introductionStepDecoded = try decoder.factory.decodeStep(from: nestedDecoder)
+            introductionStepDecoded = try decoder.factory.decodePolymorphicObject(RSDStep.self, from: nestedDecoder)
         }
         let introductionStepBuild = type(of: self).buildIntroductionStep()
         self.introductionStep = introductionStepDecoded ?? introductionStepBuild
@@ -249,7 +260,7 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
         // Look to see if this should be decoded using the factory.
         let nestedDecoder = try container.superDecoder(forKey: identifier)
         if let _ =  try decoder.factory.typeName(from: nestedDecoder) {
-            let step = try decoder.factory.decodeStep(from: nestedDecoder)
+            let step = try decoder.factory.decodePolymorphicObject(RSDStep.self, from: nestedDecoder)
             if let trackingStep = step as? SBATrackedItemsStep {
                 // If the decoded step is of the expected type then set the items and sections and
                 // return the step decoded by the decoder.
@@ -560,4 +571,50 @@ open class SBATrackedItemsStepNavigator : Decodable, RSDStepNavigator, RSDTracki
     open func progress(for step: RSDStep, with result: RSDTaskResult?) -> (current: Int, total: Int, isEstimated: Bool)? {
         return nil
     }
+    
+    // MARK: RSDTask implementation
+    
+    public var identifier: String {
+        activityIdentifier.stringValue
+    }
+    
+    public private(set) var schemaInfo: RSDSchemaInfo? = nil
+    
+    public var stepNavigator: RSDStepNavigator { self }
+    
+    public var asyncActions: [AsyncActionConfiguration]? { nil }
+    
+    public func instantiateTaskResult() -> RSDTaskResult {
+        RSDTaskResultObject(identifier: identifier,
+                            versionString: schemaInfo.map { "\($0.schemaVersion)" },
+                            schemaIdentifier: schemaInfo?.schemaIdentifier)
+    }
+    
+    public func validate() throws {
+    }
+    
+    // MARK: Copy
+    
+    public required init(from navigator: SBATrackedItemsStepNavigator, identifier: String, schemaInfo: RSDSchemaInfo?) {
+        self.activityIdentifier = RSDIdentifier(rawValue: identifier)
+        self.schemaInfo = schemaInfo
+        self.selectionStep = copyStep(navigator.selectionStep)
+        self.reviewStep = copyStep(navigator.reviewStep)
+        self.loggingStep = copyStep(navigator.loggingStep)
+        self.reminderStep = copyStep(navigator.reminderStep)
+        self.introductionStep = copyStep(navigator.introductionStep)
+        self.taskType = navigator.taskType
+    }
+    
+    public func copy(with identifier: String, schemaInfo: RSDSchemaInfo?) -> Self {
+        Self.init(from: self, identifier: identifier, schemaInfo: schemaInfo)
+    }
+    
+    public func copy(with identifier: String) -> Self {
+        self.copy(with: identifier, schemaInfo: schemaInfo)
+    }
+}
+
+fileprivate func copyStep<T>(_ step: T) -> T {
+    (step as? RSDCopyStep).map { $0.copy(with: $0.identifier) as! T } ?? step
 }

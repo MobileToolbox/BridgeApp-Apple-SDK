@@ -33,7 +33,8 @@
 
 import Foundation
 import Research
-
+import JsonModel
+import BridgeApp
 
 extension RSDFormUIHint {
     
@@ -165,9 +166,7 @@ open class SBATrackedLoggingDataSource : SBATrackingDataSource, RSDModalStepData
             return nil
         }
 
-        var navigator = RSDConditionalStepNavigatorObject(with: [step])
-        navigator.progressMarkers = []
-        let task = RSDTaskObject(identifier: step.identifier, stepNavigator: navigator)
+        let task = AssessmentTaskObject(identifier: step.identifier, steps: [step], progressMarkers: [])
         let taskViewModel = SBAModalTaskViewModel(task: task, parentViewModel: self)
         if let previousResult = self.previousResult(for: tableItem, with: step) {
             taskViewModel.append(previousResult: previousResult)

@@ -48,6 +48,10 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
         case items, sections
     }
     
+    open override class func defaultType() -> RSDStepType {
+        .selection
+    }
+    
     /// The shared result for review, details, and selection.
     public var result: SBATrackedItemsResult?
     
@@ -306,7 +310,6 @@ public struct SBATrackedItemObject : Codable, SBATrackedItem, RSDEmbeddedIconDat
 
 /// Simple tracking object for the case where only the identifier is being tracked.
 public struct SBATrackedItemsResultObject : SerializableResultData, SBATrackedItemsResult, Codable, RSDNavigationResult {
-
     private enum CodingKeys : String, CodingKey {
         case identifier, serializableType = "type", startDate, endDate, items
     }
@@ -351,6 +354,10 @@ public struct SBATrackedItemsResultObject : SerializableResultData, SBATrackedIt
     
     mutating public func updateDetails(from result: ResultData) {
         // Do nothing
+    }
+    
+    public func deepCopy() -> SBATrackedItemsResultObject {
+        self
     }
 }
 

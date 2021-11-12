@@ -42,13 +42,13 @@ import BridgeSDK
 /// that contains a custom cell type that will launch the input fields of the step.
 ///
 /// - seealso: `RSDFormUIStepObject`, `RSDStepViewControllerVendor`
-open class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewControllerVendor {
+public final class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewControllerVendor {
     
     enum CodingKeys : String, CodingKey {
         case modalTitle, descriptionFormat, noReminderSetText
     }
     
-    open override class func defaultType() -> RSDStepType {
+    public override class func defaultType() -> RSDStepType {
         .medicationReminders
     }
     
@@ -71,7 +71,7 @@ open class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewCo
     /// The result for the reminders.
     var result: SBATrackedItemsResult?
     
-    open override func decode(from decoder: Decoder, for deviceType: RSDDeviceType?) throws {
+    public override func decode(from decoder: Decoder, for deviceType: RSDDeviceType?) throws {
         try super.decode(from: decoder, for: deviceType)
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if let modalTitle = try container.decodeIfPresent(String.self, forKey: .modalTitle) {
@@ -86,17 +86,17 @@ open class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewCo
     }
     
     /// Override to return a `SBATrackedItemReminderDataSource`.
-    open override func instantiateDataSource(with parent: RSDPathComponent?, for supportedHints: Set<RSDFormUIHint>) -> RSDTableDataSource?  {
+    public override func instantiateDataSource(with parent: RSDPathComponent?, for supportedHints: Set<RSDFormUIHint>) -> RSDTableDataSource?  {
         return SBATrackedItemReminderDataSource(step: self, parent: parent, supportedHints: supportedHints)
     }
     
     #if !os(watchOS)
-    open func instantiateViewController(with parent: RSDPathComponent?) -> (UIViewController & RSDStepController)? {
+    public func instantiateViewController(with parent: RSDPathComponent?) -> (UIViewController & RSDStepController)? {
         return SBATrackedItemRemindersStepViewController(step: self, parent: parent)
     }
     #endif
     
-    override open func copyInto(_ copy: RSDUIStepObject) {
+    override public func copyInto(_ copy: RSDUIStepObject) {
         super.copyInto(copy)
         guard let subclassCopy = copy as? SBATrackedItemRemindersStepObject else {
             assertionFailure("Superclass implementation of the `copy(with:)` protocol should return an instance of this class.")

@@ -39,6 +39,10 @@ import BridgeSDK
 
 open class SBAMedicationTrackingStepNavigator : SBATrackedItemsStepNavigator {
     
+    open override class func defaultType() -> RSDTaskType {
+        .medicationTracking
+    }
+    
     var medicationResult: SBAMedicationTrackingResult? {
         return self._inMemoryResult as? SBAMedicationTrackingResult
     }

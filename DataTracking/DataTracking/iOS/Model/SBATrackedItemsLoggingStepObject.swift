@@ -41,6 +41,10 @@ import BridgeSDK
 /// information about a list of tracked items for each one.
 open class SBATrackedItemsLoggingStepObject : SBATrackedSelectionStepObject {
     
+    open override class func defaultType() -> RSDStepType {
+        .logging
+    }
+    
     #if !os(watchOS)
     /// Implement the view controller vending in the model with compile flag. This is required so that
     /// subclasses can override this method to return a different implementation of the view controller.
@@ -208,6 +212,10 @@ public struct SBATrackedLoggingCollectionResultObject : SerializableResultData, 
             return SBATrackedLoggingResultObject(identifier: $0.identifier, text: $0.text, detail: $0.detail)
         }
     }
+    
+    public func deepCopy() -> SBATrackedLoggingCollectionResultObject {
+        self.copy(with: self.identifier)
+    }
 }
 
 /// `SBATrackedLoggingResultObject` is used include multiple results associated with a tracked item.
@@ -332,6 +340,10 @@ public struct SBATrackedLoggingResultObject : SerializableResultData, RSDCollect
             let nestedEncoder = anyContainer.superEncoder(forKey: key)
             try answerResult.answerType.encode(value, to: nestedEncoder)
         }
+    }
+    
+    public func deepCopy() -> SBATrackedLoggingResultObject {
+        self
     }
 }
 
