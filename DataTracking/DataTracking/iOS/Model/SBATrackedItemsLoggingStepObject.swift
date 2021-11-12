@@ -79,26 +79,26 @@ open class SBATrackedItemsLoggingStepObject : SBATrackedSelectionStepObject {
     }
 }
 
-extension RSDResultType {
-    public static let loggingItem: RSDResultType = "loggingItem"
-    public static let loggingCollection: RSDResultType = "loggingCollection"
-    public static let symptom: RSDResultType = "symptom"
-    public static let symptomCollection: RSDResultType = "symptomCollection"
-    public static let trigger: RSDResultType = "trigger"
-    public static let triggerCollection: RSDResultType = "triggerCollection"
+extension SerializableResultType {
+    public static let loggingItem: SerializableResultType = "loggingItem"
+    public static let loggingCollection: SerializableResultType = "loggingCollection"
+    public static let symptom: SerializableResultType = "symptom"
+    public static let symptomCollection: SerializableResultType = "symptomCollection"
+    public static let trigger: SerializableResultType = "trigger"
+    public static let triggerCollection: SerializableResultType = "triggerCollection"
 }
 
 /// `SBATrackedLoggingCollectionResultObject` is used include multiple logged items in a single logging result.
-public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Codable, SBATrackedItemsCollectionResult, RSDNavigationResult {
+public struct SBATrackedLoggingCollectionResultObject : SerializableResultData, RSDCollectionResult, Codable, SBATrackedItemsCollectionResult, RSDNavigationResult {
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, loggingItems = "items"
+        case identifier, serializableType = "type", startDate, endDate, loggingItems = "items"
     }
     
     /// The identifier associated with the task, step, or asynchronous action.
     public let identifier: String
     
     /// A String that indicates the type of the result. This is used to decode the result using a `RSDFactory`.
-    public var type: RSDResultType
+    public var serializableType: SerializableResultType
     
     /// The start date timestamp for the result.
     public var startDate: Date = Date()
@@ -110,7 +110,7 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
     public var loggingItems: [SBATrackedLoggingResultObject]
     
     // The input results are the logging items.
-    public var inputResults: [ResultData] {
+    public var children: [ResultData] {
         get {
             return loggingItems
         }
@@ -128,7 +128,7 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
     ///     - identifier: The identifier string.
     public init(identifier: String) {
         self.identifier = identifier
-        self.type = .loggingCollection
+        self.serializableType = .loggingCollection
         self.loggingItems = []
     }
 
@@ -136,7 +136,7 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
         var copy = SBATrackedLoggingCollectionResultObject(identifier: identifier)
         copy.startDate = self.startDate
         copy.endDate = self.endDate
-        copy.type = self.type
+        copy.serializableType = self.serializableType
         copy.loggingItems = self.loggingItems
         return copy
     }
@@ -193,8 +193,8 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
         // another dictionary.
         let previousData: NSDictionary = {
             if let trackedItems = dictionary["trackedItems"] as? NSDictionary,
-                let type = trackedItems[CodingKeys.type.rawValue] as? String,
-                self.type.rawValue == type {
+                let type = trackedItems[CodingKeys.serializableType.rawValue] as? String,
+                self.serializableType.rawValue == type {
                 return trackedItems
             }
             else {
@@ -211,7 +211,7 @@ public struct SBATrackedLoggingCollectionResultObject : RSDCollectionResult, Cod
 }
 
 /// `SBATrackedLoggingResultObject` is used include multiple results associated with a tracked item.
-public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
+public struct SBATrackedLoggingResultObject : SerializableResultData, RSDCollectionResult, Codable {
 
     private enum CodingKeys : String, CodingKey {
         case identifier, text, detail, loggedDate, itemIdentifier, timingIdentifier, timeZone
@@ -239,7 +239,7 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
     public let timeZone: TimeZone
     
     /// A String that indicates the type of the result. This is used to decode the result using a `RSDFactory`.
-    public var type: RSDResultType = .loggingItem
+    public var serializableType: SerializableResultType = .loggingItem
     
     /// The start date timestamp for the result.
     public var startDate: Date = Date()
@@ -249,7 +249,7 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
     
     /// The list of input results associated with this step. These are generally assumed to be answers to
     /// field inputs, but they are not required to implement the `RSDAnswerResult` protocol.
-    public var inputResults: [ResultData]
+    public var children: [ResultData]
     
     /// Default initializer for this object.
     ///
@@ -259,21 +259,21 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
         self.identifier = identifier
         self.text = text
         self.detail = detail
-        self.inputResults = []
+        self.children = []
         self.timeZone = TimeZone.current
     }
     
-    internal init(identifier: String, text: String?, detail: String?, loggedDate: Date?, timeZone: TimeZone, inputResults: [RSDResult]) {
+    internal init(identifier: String, text: String?, detail: String?, loggedDate: Date?, timeZone: TimeZone, children: [ResultData]) {
         self.identifier = identifier
         self.text = text
         self.detail = detail
-        self.inputResults = inputResults
+        self.children = children
         self.timeZone = timeZone
         self.loggedDate = loggedDate
     }
     
     /// Initialize from a `Decoder`. This decoding method will use the `RSDFactory` instance associated
-    /// with the decoder to decode the `inputResults`.
+    /// with the decoder to decode the `children`.
     ///
     /// - parameter decoder: The decoder to use to decode this instance.
     /// - throws: `DecodingError`
@@ -292,7 +292,7 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
             self.timeZone = TimeZone.current
         }
         // TODO: syoung 05/30/2018 Decode the answers.
-        self.inputResults = []
+        self.children = []
     }
     
     /// Encode the result to the given encoder.
@@ -316,7 +316,7 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
         try container.encode(self.timeZone.identifier, forKey: .timeZone)
         
         var anyContainer = encoder.container(keyedBy: AnyCodingKey.self)
-        try inputResults.forEach { result in
+        try children.forEach { result in
             let key = AnyCodingKey(stringValue: result.identifier)!
             guard let answerResult = result as? RSDAnswerResult
                 else {
@@ -338,7 +338,7 @@ public struct SBATrackedLoggingResultObject : RSDCollectionResult, Codable {
 extension SBATrackedLoggingResultObject : SBATrackedItemAnswer {
     
     public var hasRequiredValues: Bool {
-        if self.type == .symptom {
+        if self.serializableType == .symptom {
             // For a symptom result, need to have a severity.
             return (self.findAnswerResult(with: SBASymptomTableItem.ResultIdentifier.severity.stringValue)?.value != nil)
         }

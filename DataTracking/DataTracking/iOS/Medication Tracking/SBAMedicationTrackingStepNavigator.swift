@@ -429,7 +429,7 @@ extension SBAMedicationAnswer : SBAMedication {
 public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionResult, RSDNavigationResult {
 
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, medications = "items", reminders, revision, timeZone
+        case identifier, serializableType = "type", startDate, endDate, medications = "items", reminders, revision, timeZone
     }
     
     /// The identifier associated with the task, step, or asynchronous action.
@@ -439,7 +439,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
     public private(set) var revision: Int?
     
     /// A String that indicates the type of the result. This is used to decode the result using a `RSDFactory`.
-    public private(set) var type: RSDResultType = .medication
+    public private(set) var serializableType: SerializableResultType = .medication
     
     /// The start date timestamp for the result.
     public var startDate: Date = Date()
@@ -481,7 +481,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.type = .medication
+        self.serializableType = .medication
         
         // For medications, the encoded results do not include these values by default
         // because they are ignored in favor of the timestamps.
@@ -513,7 +513,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         var copy = SBAMedicationTrackingResult(identifier: identifier)
         copy.startDate = self.startDate
         copy.endDate = self.endDate
-        copy.type = self.type
+        copy.serializableType = self.serializableType
         copy.medications = self.medications
         copy.reminders = self.reminders
         copy.revision = self.revision
@@ -621,7 +621,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
     }
     
     mutating func updateReminders(from result: ResultData) {
-        let aResult = ((result as? RSDCollectionResult)?.inputResults.first ?? result) as? RSDAnswerResult
+        let aResult = ((result as? RSDCollectionResult)?.children.first ?? result) as? RSDAnswerResult
         if let array = aResult?.value as? [Int] {
             self.reminders = array
         }

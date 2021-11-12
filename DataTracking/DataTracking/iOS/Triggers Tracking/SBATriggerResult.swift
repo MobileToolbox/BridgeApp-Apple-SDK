@@ -36,7 +36,7 @@ import JsonModel
 import Research
 
 public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
-    public let type: RSDResultType = .trigger
+    public let serializableType: SerializableResultType = .trigger
     
     private enum CodingKeys : String, CodingKey {
         case identifier, loggedDate, text, timeZone
@@ -112,10 +112,10 @@ public struct SBATriggerResult : ResultData, Codable, RSDScoringResult {
 
 /// Wrapper for a collection of symptoms as a result.
 public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
-    public let type: RSDResultType = .triggerCollection
+    public let serializableType: SerializableResultType = .triggerCollection
     
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, triggerResults = "items"
+        case identifier, serializableType = "type", startDate, endDate, triggerResults = "items"
     }
     
     /// The identifier for the result.
@@ -131,7 +131,7 @@ public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
     public var triggerResults: [SBATriggerResult] = []
     
     /// A wrapper for the codable results.
-    public var inputResults: [ResultData] {
+    public var children: [ResultData] {
         get {
             return triggerResults
         }

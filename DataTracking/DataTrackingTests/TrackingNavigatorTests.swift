@@ -33,6 +33,7 @@
 
 import XCTest
 import Research
+import JsonModel
 @testable import BridgeApp
 @testable import DataTracking
 import NSLocaleSwizzle

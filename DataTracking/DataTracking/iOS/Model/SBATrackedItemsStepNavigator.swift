@@ -33,6 +33,7 @@
 
 import Foundation
 import Research
+import JsonModel
 import BridgeApp
 import BridgeSDK
 

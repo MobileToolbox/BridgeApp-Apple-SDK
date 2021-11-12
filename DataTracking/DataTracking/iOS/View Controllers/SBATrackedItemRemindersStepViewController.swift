@@ -35,6 +35,7 @@ import UIKit
 import UserNotifications
 import Research
 import ResearchUI
+import JsonModel
 
 
 /// `SBATrackedItemRemindersStepViewController` contains a prompt butotn cell that
@@ -134,6 +135,6 @@ open class SBATrackedReminderModalButtonCell : RSDButtonCell {
 extension ResultData {
     
     func firstAnswerResult() -> RSDAnswerResult? {
-        return ((self as? RSDCollectionResult)?.inputResults.first ?? self) as? RSDAnswerResult
+        return ((self as? RSDCollectionResult)?.children.first ?? self) as? RSDAnswerResult
     }
 }

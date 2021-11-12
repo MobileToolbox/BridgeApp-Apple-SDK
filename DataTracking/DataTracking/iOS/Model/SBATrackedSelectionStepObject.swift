@@ -305,17 +305,17 @@ public struct SBATrackedItemObject : Codable, SBATrackedItem, RSDEmbeddedIconDat
 
 
 /// Simple tracking object for the case where only the identifier is being tracked.
-public struct SBATrackedItemsResultObject : SBATrackedItemsResult, Codable, RSDNavigationResult {
+public struct SBATrackedItemsResultObject : SerializableResultData, SBATrackedItemsResult, Codable, RSDNavigationResult {
 
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, items
+        case identifier, serializableType = "type", startDate, endDate, items
     }
     
     /// The identifier associated with the task, step, or asynchronous action.
     public let identifier: String
     
     /// A String that indicates the type of the result. This is used to decode the result using a `RSDFactory`.
-    public private(set) var type: RSDResultType = "trackedItemsReview"
+    public private(set) var serializableType: SerializableResultType = "trackedItemsReview"
     
     /// The start date timestamp for the result.
     public var startDate: Date = Date()

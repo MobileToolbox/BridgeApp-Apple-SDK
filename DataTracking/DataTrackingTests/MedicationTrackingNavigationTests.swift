@@ -35,6 +35,7 @@ import XCTest
 @testable import BridgeApp
 @testable import DataTracking
 import Research
+import JsonModel
 
 class MedicationTrackingNavigationTests: XCTestCase {
     
@@ -333,7 +334,7 @@ func remindersResult(reminderStep: SBATrackedItemRemindersStepObject) -> RSDColl
                                                                              unit: nil,
                                                                              sequenceSeparator: nil))
     answerResult.value = [45, 60]
-    result.inputResults = [answerResult]
+    result.children = [answerResult]
     return result
 }
 

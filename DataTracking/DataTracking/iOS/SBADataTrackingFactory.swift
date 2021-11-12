@@ -33,6 +33,7 @@
 
 import Foundation
 import Research
+import JsonModel
 import BridgeApp
 
 extension RSDStepNavigatorType {
@@ -68,11 +69,11 @@ extension RSDStepType {
     public static let medicationTracking: RSDStepType = "medicationTracking"
 }
 
-extension RSDResultType {
+extension SerializableResultType {
     
-    public static let medication: RSDResultType = "medication"
+    public static let medication: SerializableResultType = "medication"
     
-    public static let medicationDetails: RSDResultType = "medicationDetails"
+    public static let medicationDetails: SerializableResultType = "medicationDetails"
 }
 
 open class SBADataTrackingFactory : SBAFactory {

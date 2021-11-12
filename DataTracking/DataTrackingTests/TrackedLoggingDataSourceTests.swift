@@ -35,6 +35,7 @@ import XCTest
 @testable import BridgeApp
 @testable import DataTracking
 import Research
+import JsonModel
 import NSLocaleSwizzle
 
 class TrackedLoggingDataSourceTests: XCTestCase {
@@ -268,7 +269,7 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         var resultFoo = SBATrackedLoggingResultObject(identifier: "foo")
         resultFoo.loggedDate = Date()
         let fooValues = [("a", 1), ("b", 2), ("c", 3)]
-        resultFoo.inputResults = fooValues.map { (value) -> RSDAnswerResult in
+        resultFoo.children = fooValues.map { (value) -> RSDAnswerResult in
             var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
@@ -277,7 +278,7 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         var resultGoo = SBATrackedLoggingResultObject(identifier: "goo")
         resultGoo.loggedDate = Date()
         let gooValues = [("a", 4), ("b", 5), ("c", 6)]
-        resultGoo.inputResults = gooValues.map { (value) -> RSDAnswerResult in
+        resultGoo.children = gooValues.map { (value) -> RSDAnswerResult in
             var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
@@ -294,7 +295,7 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         if let firstResult = inMemoryResult.loggingItems.first {
             XCTAssertEqual(firstResult.identifier, "foo")
             XCTAssertEqual(firstResult.loggedDate, resultFoo.loggedDate)
-            XCTAssertEqual(firstResult.inputResults.count, 3)
+            XCTAssertEqual(firstResult.children.count, 3)
             let answerA = firstResult.findAnswerResult(with: "a")
             XCTAssertNotNil(answerA)
             XCTAssertEqual(answerA?.value as? Int, 1)

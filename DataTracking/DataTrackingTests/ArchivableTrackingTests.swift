@@ -57,7 +57,7 @@ class ArchivableTrackingTests: XCTestCase {
         loggedResultA.loggedDate = Date().addingTimeInterval(-60)
         var answerResult = RSDAnswerResultObject(identifier: "foo", answerType: .string)
         answerResult.value = "goo"
-        loggedResultA.inputResults = [answerResult]
+        loggedResultA.children = [answerResult]
         let loggedResultB = SBATrackedLoggingResultObject(identifier: "itemB", text: "Item B", detail: "b detail")
         result.loggingItems = [loggedResultA, loggedResultB]
         

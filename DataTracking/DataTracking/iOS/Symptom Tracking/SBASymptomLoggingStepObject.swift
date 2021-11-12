@@ -65,7 +65,7 @@ open class SBASymptomLoggingDataSource : SBATrackedLoggingDataSource {
             }
             else {
                 var result = SBATrackedLoggingResultObject(identifier: itemAnswer.identifier, text: choice.text, detail: choice.detail)
-                result.type = .symptom
+                result.serializableType = .symptom
                 result.loggedDate = Date()
                 return result
             }
@@ -376,7 +376,7 @@ public struct SBASymptomResult : Codable, RSDScoringResult {
         case identifier, text, loggedDate, timeZone, severity, duration, medicationTiming, notes
     }
     
-    public let type: RSDResultType = .symptom
+    public let serializableType: SerializableResultType = .symptom
     
     public let identifier: String
     
@@ -499,10 +499,10 @@ public struct SBASymptomReportData : Codable {
 
 /// Wrapper for a collection of symptoms as a result.
 public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
-    public let type: RSDResultType = .symptomCollection
+    public let serializableType: SerializableResultType = .symptomCollection
     
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, symptomResults = "items"
+        case identifier, serializableType = "type", startDate, endDate, symptomResults = "items"
     }
     
     public let identifier: String
@@ -517,7 +517,7 @@ public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
     public var symptomResults: [SBASymptomResult] = []
     
     /// A wrapper for the input results.
-    public var inputResults: [ResultData] {
+    public var children: [ResultData] {
         get {
             return symptomResults
         }
