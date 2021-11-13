@@ -30,8 +30,7 @@ let package = Package(
         .package(
             name: "SageResearch",
             url: "https://github.com/Sage-Bionetworks/SageResearch.git",
-            .branch("fix-internal-init")),
-            //from: "4.1.0"),
+            from: "4.2.4"),
         .package(
             name: "BridgeSDK",
             url: "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
