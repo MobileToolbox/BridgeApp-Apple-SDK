@@ -45,9 +45,9 @@ let package = Package(
         .target(
             name: "BridgeApp",
             dependencies: [
+                .product(name: "BridgeSDK", package: "BridgeSDK"),
                 .product(name: "Research", package: "SageResearch"),
                 .product(name: "ResearchUI", package: "SageResearch"),
-                "BridgeSDK",
                 "JsonModel",
             ],
             path: "BridgeApp/BridgeApp/iOS",
@@ -58,10 +58,10 @@ let package = Package(
         .target(
             name: "BridgeAppUI",
             dependencies: [
+                "BridgeApp",
                 .product(name: "Research", package: "SageResearch"),
                 .product(name: "ResearchUI", package: "SageResearch"),
-                "BridgeApp",
-                "BridgeSDK",
+                .product(name: "BridgeSDK", package: "BridgeSDK"),
             ],
             path: "BridgeApp/BridgeAppUI/iOS",
             resources: [
@@ -82,13 +82,15 @@ let package = Package(
         .target(name: "BridgeApp_UnitTest",
                 dependencies: [
                     "BridgeApp",
-                    "BridgeSDK",
+                    .product(name: "BridgeSDK", package: "BridgeSDK"),
                     "BridgeSDKSwizzle",
                 ],
                 path: "BridgeApp/BridgeApp_UnitTest"),
     
         .target(name: "BridgeSDKSwizzle",
-                dependencies: ["BridgeSDK"],
+                dependencies: [
+                    .product(name: "BridgeSDK", package: "BridgeSDK"),
+                ],
                 path: "BridgeApp/BridgeSDKSwizzle/"),
         
         .target(name: "DataTracking",

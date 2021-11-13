@@ -31,7 +31,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-@import BridgeSDK;
+#import <BridgeSDK/BridgeSDK.h>
 
 /**
  Registering mocks using `SBBComponentManager` only appears to work if you are running unit tests
