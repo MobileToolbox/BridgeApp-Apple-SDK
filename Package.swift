@@ -92,7 +92,11 @@ let package = Package(
                 dependencies: [
                     .product(name: "BridgeSDK", package: "BridgeSDK"),
                 ],
-                path: "BridgeApp/BridgeSDKSwizzle/"),
+                path: "BridgeApp/BridgeSDKSwizzle/",
+                linkerSettings: [
+                    .linkedFramework("BridgeSDK")
+                ]
+               ),
         
         .target(name: "DataTracking",
                 dependencies: [
