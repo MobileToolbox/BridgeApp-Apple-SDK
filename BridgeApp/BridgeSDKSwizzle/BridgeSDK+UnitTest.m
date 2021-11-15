@@ -66,7 +66,7 @@ static BOOL _hasBeenSwizzled_ActivityManager = false;
         _hasBeenSwizzled_ParticipantManager = true;
         
         // Swizzle the appConfig
-        Method origMethod = class_getClassMethod([BridgeSDK class], @selector(participantManager));
+        Method origMethod = class_getClassMethod(self, @selector(participantManager));
         Method newMethod = class_getClassMethod(self, @selector(sba_testParticipantManager));
         method_exchangeImplementations(origMethod, newMethod);
     }
@@ -81,7 +81,7 @@ static BOOL _hasBeenSwizzled_ActivityManager = false;
         _hasBeenSwizzled_ActivityManager = true;
         
         // Swizzle the appConfig
-        Method origMethod = class_getClassMethod([BridgeSDK class], @selector(activityManager));
+        Method origMethod = class_getClassMethod(self, @selector(activityManager));
         Method newMethod = class_getClassMethod(self, @selector(sba_testActivityManager));
         method_exchangeImplementations(origMethod, newMethod);
     }
