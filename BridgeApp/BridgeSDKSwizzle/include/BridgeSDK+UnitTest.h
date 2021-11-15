@@ -31,7 +31,11 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
-#import <BridgeSDK/BridgeSDK.h>
+#import <Foundation/Foundation.h>
+
+@class SBBAppConfig;
+@protocol SBBParticipantManagerProtocol;
+@protocol SBBActivityManagerProtocol;
 
 /**
  Registering mocks using `SBBComponentManager` only appears to work if you are running unit tests
@@ -41,7 +45,7 @@
  was to swizzle the getters. (syoung 11/11/2021)
  */
 
-@interface BridgeSDK (UnitTest)
+@interface BridgeSDKTest : NSObject
 
 + (SBBAppConfig * _Nullable)testAppConfig;
 + (void)setTestAppConfig: (SBBAppConfig * _Nonnull)appConfig;

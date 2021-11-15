@@ -31,6 +31,7 @@
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 
+#import <BridgeSDK/BridgeSDK.h>
 #import "include/BridgeSDK+UnitTest.h"
 #import <objc/runtime.h>
 
@@ -57,8 +58,42 @@ static BOOL _hasBeenSwizzled_ActivityManager = false;
 }
 
 + (SBBAppConfig *)sba_testAppConfig {
-    return [self testAppConfig];
+    return [BridgeSDKTest testAppConfig];
 }
+
++ (void)swizzleParticipantManager {
+    if (!_hasBeenSwizzled_ParticipantManager) {
+        _hasBeenSwizzled_ParticipantManager = true;
+        
+        // Swizzle the appConfig
+        Method origMethod = class_getClassMethod([BridgeSDK class], @selector(participantManager));
+        Method newMethod = class_getClassMethod(self, @selector(sba_testParticipantManager));
+        method_exchangeImplementations(origMethod, newMethod);
+    }
+}
+
++ (id<SBBParticipantManagerProtocol> _Nonnull)sba_testParticipantManager {
+    return [BridgeSDKTest testParticipantManager];
+}
+
++ (void)swizzleActivityManager {
+    if (!_hasBeenSwizzled_ActivityManager) {
+        _hasBeenSwizzled_ActivityManager = true;
+        
+        // Swizzle the appConfig
+        Method origMethod = class_getClassMethod([BridgeSDK class], @selector(activityManager));
+        Method newMethod = class_getClassMethod(self, @selector(sba_testActivityManager));
+        method_exchangeImplementations(origMethod, newMethod);
+    }
+}
+
++ (id<SBBActivityManagerProtocol> _Nonnull)sba_testActivityManager {
+    return [BridgeSDKTest testActivityManager];
+}
+
+@end
+
+@implementation BridgeSDKTest
 
 + (SBBAppConfig *)testAppConfig {
     return _currentTestAppConfig;
@@ -66,23 +101,7 @@ static BOOL _hasBeenSwizzled_ActivityManager = false;
 
 + (void)setTestAppConfig: (SBBAppConfig *)appConfig {
     _currentTestAppConfig = appConfig;
-    [self swizzleAppConfig];
-}
-
-
-+ (void)swizzleParticipantManager {
-    if (!_hasBeenSwizzled_ParticipantManager) {
-        _hasBeenSwizzled_ParticipantManager = true;
-        
-        // Swizzle the appConfig
-        Method origMethod = class_getClassMethod(self, @selector(participantManager));
-        Method newMethod = class_getClassMethod(self, @selector(sba_testParticipantManager));
-        method_exchangeImplementations(origMethod, newMethod);
-    }
-}
-
-+ (id<SBBParticipantManagerProtocol> _Nonnull)sba_testParticipantManager {
-    return [self testParticipantManager];
+    [BridgeSDK swizzleAppConfig];
 }
 
 + (id<SBBParticipantManagerProtocol> _Nullable)testParticipantManager {
@@ -91,22 +110,7 @@ static BOOL _hasBeenSwizzled_ActivityManager = false;
 
 + (void)setTestParticipantManager: (id<SBBParticipantManagerProtocol> _Nonnull) manager {
     _currentTestParticipantManager = manager;
-    [self swizzleParticipantManager];
-}
-
-+ (void)swizzleActivityManager {
-    if (!_hasBeenSwizzled_ActivityManager) {
-        _hasBeenSwizzled_ActivityManager = true;
-        
-        // Swizzle the appConfig
-        Method origMethod = class_getClassMethod(self, @selector(activityManager));
-        Method newMethod = class_getClassMethod(self, @selector(sba_testActivityManager));
-        method_exchangeImplementations(origMethod, newMethod);
-    }
-}
-
-+ (id<SBBActivityManagerProtocol> _Nonnull)sba_testActivityManager {
-    return [self testActivityManager];
+    [BridgeSDK swizzleParticipantManager];
 }
 
 + (id<SBBActivityManagerProtocol> _Nullable)testActivityManager {
@@ -115,7 +119,7 @@ static BOOL _hasBeenSwizzled_ActivityManager = false;
 
 + (void)setTestActivityManager: (id<SBBActivityManagerProtocol> _Nonnull) manager {
     _currentTestActivityManager = manager;
-    [self swizzleParticipantManager];
+    [BridgeSDK swizzleActivityManager];
 }
 
 @end

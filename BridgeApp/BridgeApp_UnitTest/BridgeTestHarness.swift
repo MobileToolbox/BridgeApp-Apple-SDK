@@ -60,12 +60,12 @@ open class BridgeTestHarness {
            let json = try? JSONSerialization.jsonObject(with: data, options: []),
            let obj = objectManager.object(fromBridgeJSON: json),
            let appConfig = obj as? SBBAppConfig {
-            BridgeSDK.setTestAppConfig(appConfig)
+            BridgeSDKTest.setTest(appConfig)
         }
         
         // Setup mock participant
         self.participantManager = MockSBBParticipantManager(participant: mockParticipant)
-        BridgeSDK.setTestParticipantManager(self.participantManager)
+        BridgeSDKTest.setTestParticipantManager(self.participantManager)
     }
     
     var isSetup = false
