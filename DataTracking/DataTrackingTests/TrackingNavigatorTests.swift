@@ -2,7 +2,7 @@
 //  TrackingNavigatorTests.swift
 //  BridgeAppTests
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -33,6 +33,7 @@
 
 import XCTest
 import Research
+import JsonModel
 @testable import BridgeApp
 @testable import DataTracking
 import NSLocaleSwizzle
@@ -166,11 +167,7 @@ class TrackingNavigatorTests: XCTestCase {
         """.data(using: .utf8)! // our data in native (JSON) format
         
         do {
-            let task = try decoder.decode(RSDTaskObject.self, from: json)
-            guard task.stepNavigator is SBATrackedItemsStepNavigator else {
-                XCTFail("Failed to decode the step navigator. Exiting.")
-                return nil
-            }
+            let task = try decoder.decode(SBATrackedItemsStepNavigator.self, from: json)
             return RSDTaskViewModel(task: task)
             
         } catch let err {

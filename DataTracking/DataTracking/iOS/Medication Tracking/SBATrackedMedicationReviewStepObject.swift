@@ -2,7 +2,7 @@
 //  SBATrackedMedicationReviewStepObject.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -34,9 +34,16 @@
 import Foundation
 import UIKit
 import Research
+import ResearchUI
+import BridgeApp
+import BridgeAppUI
 
 /// A step used for review selected medication and their details
 open class SBATrackedMedicationReviewStepObject : SBATrackedSelectionStepObject {
+    
+    open override class func defaultType() -> RSDStepType {
+        .review
+    }
     
     #if !os(watchOS)
     /// Override to return a medication tracking review step view controller.
@@ -56,8 +63,8 @@ open class SBATrackedMedicationReviewStepObject : SBATrackedSelectionStepObject 
         _commonInit()
     }
     
-    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil, type: RSDStepType? = nil) {
-        super.init(identifier: identifier, items: items, sections: sections, type: type)
+    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
+        super.init(identifier: identifier, items: items, sections: sections)
         _commonInit()
     }
     

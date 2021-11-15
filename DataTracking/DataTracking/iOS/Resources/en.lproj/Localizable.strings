@@ -1,0 +1,114 @@
+/* 
+ Localizable.strings
+ DataTracking
+
+ Copyright © 2017-2021 Sage Bionetworks. All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without modification,
+ are permitted provided that the following conditions are met:
+ 
+ 1.  Redistributions of source code must retain the above copyright notice, this
+ list of conditions and the following disclaimer.
+ 
+ 2.  Redistributions in binary form must reproduce the above copyright notice,
+ this list of conditions and the following disclaimer in the documentation and/or
+ other materials provided with the distribution.
+ 
+ 3.  Neither the name of the copyright holder(s) nor the names of any contributors
+ may be used to endorse or promote products derived from this software without
+ specific prior written permission. No license is granted to the trademarks of
+ the copyright holders even if such marks are included in this software.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+*/
+
+/* Symptom Duration */
+"ADD_DURATION_BUTTON" = "Add duration"; // The title for the "Add duration" button of the symptoms tracking.
+"DURATION_CHOICE_NOW" = "Currently occurring";
+"DURATION_CHOICE_SHORT_PERIOD" = "A short period of time";
+"DURATION_CHOICE_A_WHILE" = "A little while";
+"DURATION_CHOICE_MORNING" = "All morning";
+"DURATION_CHOICE_AFTERNOON" = "All afternoon";
+"DURATION_CHOICE_EVENING" = "All evening";
+"DURATION_CHOICE_HALF_DAY" = "Half the day";
+"DURATION_CHOICE_ALL_DAY" = "All day long";
+"DURATION_CHOICE_HALF_NIGHT" = "Half the night";
+"DURATION_CHOICE_ALL_NIGHT" = "All night";
+"DURATION_SELECTION_TITLE" = "How long did this symptom last?";
+"DURATION_SELECTION_DETAIL" = "Select one";
+
+/* Medication Logging */
+"MORNING_MEDICATION_SECTION_TITLE" = "Morning medications";
+"AFTERNOON_MEDICATION_SECTION_TITLE" = "Afternoon medications";
+"EVENING_MEDICATION_SECTION_TITLE" = "Evening medications";
+"MISSED_MEDICATION_SECTION_TITLE" = "Missed medications";
+"UPCOMING_MEDICATION_SECTION_TITLE" = "Upcoming medications";
+"MEDICATION_ANYTIME" = "Anytime";
+"MEDICATION_DAY_OF_WEEK_%@" = "On which days do you want to take %@";
+"MEDICATION_SCHEDULE_EVERYDAY" = "Every day";
+"MEDICATION_LIST_TITLE" = "Medication list";
+"MEDICATION_EDIT_LIST_TITLE" = "Edit medication list";
+"MEDICATION_REMOVE_TEXT" = "Removing this medication will remove it from your Medications list. If you wish to re-add it, it will not be saved.";
+"MEDICATION_REMOVE_BUTTON_TEXT" = "Yes, remove medication";
+"MEDICATION_REMOVE_MEDICATION" = "Remove medication";
+"MEDICATION_REMOVE_TITLE_%@" = "Are you sure you want to remove %@ from your current medication list?";
+"TRACKED_ITEM_REMINDER_MODAL_TITLE" = "When do you want us to remind you?";
+"MEDICATION_REMINDER_ADD" = "Add reminders";
+"TRACKED_REMINDER_CHOICES_NONE_SET" = "(no reminders set)";
+"MEDICATION_REMINDER_CHOICES_%@" = "%@ minutes before medication time.";
+"MEDICATION_LOGGING_TIME_EDIT_%@" = "%@ - Edit";
+"MEDICATION_VIEW_LIST" = "View medication list";
+"MEDICATION_REMOVE_TEXT" = "Removing this medication will remove it from your Medications list. If you wish to re-add it, it will not be saved.";
+"MEDICATION_ADD_DETAILS" = "Add details";
+"MEDICATION_EDIT_DETAILS" = "Edit details";
+"MEDICATION_ADD_BUTTON" = "Add a medication";
+"MEDICATION_ADD_DOSE_BUTTON" = "Add another dose";
+"OTHER_SECTION_TITLE" = "Other";
+"MEDICATION_SELECTION_TITLE" = "What medications are you taking?";
+"MEDICATION_SELECTION_DETAIL" = "Select all that apply";
+"MEDICATION_ADD_DETAILS_TITLE" = "Add medication details to start tracking your medications";
+"MEDICATION_ADD_DETAILS_DETAIL" = "Select to add your medication dosing information and schedule.";
+"MEDICATION_ADD_MORE_BUTTON" = "＋ Add medications";
+"MEDICATION_DOSAGE_PROMPT" = "Dosage";
+"MEDICATION_DOSAGE_PLACEHOLDER" = "e.g. 10/100 mg";    // Placeholder text for medication dosage.
+"MEDICATION_DAYS_OF_WEEK_TITLE_%1$@_at_%2$@" = "Which days do you take %1$@ at %2$@?"; // ex. "Advil at 7:00 AM"
+"MEDICATION_REVIEW_TITLE" = "Medication list";
+"MEDICATION_REVIEW_SKIP" = "I'll add details later";
+"SCHEDULING_SELECTION_NO_TIMES" = "Select Time(s)";
+"SCHEDULING_SELECTION_NO_DAYS" = "Select Day(s)";
+"MEDICATION_TAKE_ANYTIME" = "Take this medication at any time";
+"MEDICATION_TAKE_USING_SCHEDULE" = "When do you take this?";
+"MEDICATION_TIME_PICKER_TEXT" = "At what times do you take %@?";
+"MEDICATION_DAY_PICKER_TEXT" = "On which days do you take %@?";
+"MEDICATION_REMOVE_YES" = "Yes, remove dose";
+"MEDICATION_REMOVE_NO" = "No, keep dose";
+"MEDICATION_REMOVE_DOSAGE_CONFIRMATION_MESSAGE" = "Are you sure you want to remove this dose?";
+"MEDICATION_SCHEDULE_SUMMARY" = "%1$@\n%2$@";
+"MEDICATION_RECORD_TODAY_QUESTION" = "Would you like to record a medication for today?";
+"MEDICATION_RECORD_TODAY_YES" = "Record a medication";
+"MEDICATION_RECORD_TODAY_NO" = "Not right now";
+"MEDICATION_RECORD_NONE" = "You have no medications to record right now.";
+"MEDICATION_ACTIVE_TASK_TITLE" = "Did you take your medications today?";
+"MEDICATION_ACTIVE_TASK_DETAIL" = "We noticed that your medications have not been recorded. Did you take them?";
+
+
+"MORNING_PICKER_SECTION_TITLE" = "Morning";
+"AFTERNOON_PICKER_SECTION_TITLE" = "Afternoon";
+"EVENING_PICKER_SECTION_TITLE" = "Evening";
+"NIGHT_PICKER_SECTION_TITLE" = "Night";
+
+/* Severity Levels */
+"SYMPTOM_SEVERITY_NONE" = "None";
+"SYMPTOM_SEVERITY_MILD" = "Mild";
+"SYMPTOM_SEVERITY_MODERATE" = "Moderate";
+"SYMPTOM_SEVERITY_SEVERE" = "Severe";

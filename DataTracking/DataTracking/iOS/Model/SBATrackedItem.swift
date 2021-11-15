@@ -2,7 +2,7 @@
 //  SBATrackedItem.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,6 +35,7 @@ import Foundation
 import Research
 import BridgeApp
 import BridgeSDK
+import JsonModel
 
 /// `SBATrackedItem` is a protocol for defining an item that can be mapped using its `identifier`
 /// to a list of selected items.
@@ -101,7 +102,7 @@ public protocol SBATrackedItemAnswer : Codable, RSDChoice {
 }
 
 /// The tracked items result includes a list of all the answers for this tracked selection.
-public protocol SBATrackedItemsResult : RSDResult, RSDCopyWithIdentifier {
+public protocol SBATrackedItemsResult : ResultData, RSDCopyWithIdentifier {
     
     /// A list of the currently selected items including any tracked details.
     var selectedAnswers: [SBATrackedItemAnswer] { get }
@@ -110,7 +111,7 @@ public protocol SBATrackedItemsResult : RSDResult, RSDCopyWithIdentifier {
     mutating func updateSelected(to selectedIdentifiers: [String]?, with items: [SBATrackedItem])
     
     /// Update the result from the given task result and items.
-    mutating func updateDetails(from result: RSDResult)
+    mutating func updateDetails(from result: ResultData)
 }
 
 extension SBATrackedItemsResult {
@@ -171,7 +172,7 @@ extension SBATrackedItemsCollectionResult {
 ///
 /// - note: These steps are used as templates that are retained by the `SBATrackedItemsStepNavigator`
 /// and thus need to be mutable classes.
-public protocol SBATrackedItemsStep : class, RSDStep {
+public protocol SBATrackedItemsStep : AnyObject, RSDStep {
     
     /// The result with the list of selected items.
     var result: SBATrackedItemsResult? { get set }

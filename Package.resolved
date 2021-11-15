@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
         "state": {
           "branch": null,
-          "revision": "065409b4be18bdc0d671aeadd33d1c96c2dd3db7",
-          "version": "4.4.83"
+          "revision": "2539b6276028f8cfc2fe880bd4f73042331eccb2",
+          "version": "4.4.85"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/Sage-Bionetworks/JsonModel-Swift.git",
         "state": {
           "branch": null,
-          "revision": "f6a06486d32cadec6db7d66d492968fbc8090de6",
-          "version": "1.2.0"
+          "revision": "3bb51b58f22e9c3bdc54ebc01137f669aed30f8b",
+          "version": "1.2.3"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/Sage-Bionetworks/SageResearch.git",
         "state": {
           "branch": null,
-          "revision": "1189cc8ebd10e53e82fca07d9aae2f74a797facd",
-          "version": "4.1.2"
+          "revision": "14a0cb9b8c10ed780d2ff93072fd0510ab0ad951",
+          "version": "4.2.4"
         }
       }
     ]

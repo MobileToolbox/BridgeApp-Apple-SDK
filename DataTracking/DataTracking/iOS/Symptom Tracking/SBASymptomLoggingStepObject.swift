@@ -2,7 +2,7 @@
 //  SBASymptomLoggingStepObject.swift
 //  BridgeApp
 //
-//  Copyright © 2018-2019 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -36,9 +36,14 @@ import UIKit
 import JsonModel
 import Research
 import ResearchUI
+import BridgeApp
 
 /// A step used for logging symptoms.
 open class SBASymptomLoggingStepObject : SBATrackedItemsLoggingStepObject {
+    
+    open override class func defaultType() -> RSDStepType {
+        .symptomLogging
+    }
     
     #if !os(watchOS)
     /// Override to return a symptom logging step view controller.
@@ -65,7 +70,7 @@ open class SBASymptomLoggingDataSource : SBATrackedLoggingDataSource {
             }
             else {
                 var result = SBATrackedLoggingResultObject(identifier: itemAnswer.identifier, text: choice.text, detail: choice.detail)
-                result.type = .symptom
+                result.serializableType = .symptom
                 result.loggedDate = Date()
                 return result
             }
@@ -83,7 +88,7 @@ open class SBASymptomLoggingDataSource : SBATrackedLoggingDataSource {
         return formStep
     }
     
-    override open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> RSDResult? {
+    override open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> ResultData? {
         guard let symptomItem = tableItem as? SBASymptomTableItem else {
             return super.previousResult(for: tableItem, with: step)
         }
@@ -163,7 +168,7 @@ public enum SBASymptomDurationLevel : Int, Codable {
         "DURATION_CHOICE_ALL_NIGHT"
     ]
     
-    public init?(result: RSDResult) {
+    public init?(result: ResultData) {
         guard let answerResult = result as? RSDAnswerResult else { return nil }
         if let value = answerResult.value as? SBASymptomDurationLevel {
             self = value
@@ -271,7 +276,7 @@ extension SBASymptomDurationLevel : RSDChoice {
         return nil
     }
     
-    public func isEqualToResult(_ result: RSDResult?) -> Bool {
+    public func isEqualToResult(_ result: ResultData?) -> Bool {
         guard let aResult = result, let level = SBASymptomDurationLevel(result: aResult) else { return false }
         return level == self
     }
@@ -297,7 +302,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             return SBASymptomSeverityLevel(rawValue: rawValue)
         }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.severity.rawValue, answerType: .integer)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.severity.rawValue, answerType: .integer)
             answerResult.value = newValue?.rawValue
             loggedResult.appendInputResults(with: answerResult)
             if newValue != nil, loggedResult.loggedDate == nil {
@@ -326,7 +331,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             return SBASymptomDurationLevel(result: result)
         }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.duration.rawValue, answerType: SBASymptomDurationLevel.answerType)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.duration.rawValue, answerType: SBASymptomDurationLevel.answerType)
             answerResult.value = newValue?.answerValue
             loggedResult.appendInputResults(with: answerResult)
         }
@@ -341,7 +346,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             }
             return SBASymptomMedicationTiming(rawValue: rawValue)        }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.medicationTiming.rawValue, answerType: .string)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.medicationTiming.rawValue, answerType: .string)
             answerResult.value = newValue?.rawValue
             loggedResult.appendInputResults(with: answerResult)
         }
@@ -353,7 +358,7 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
             return loggedResult.findAnswerResult(with: ResultIdentifier.notes.rawValue)?.value as? String
         }
         set {
-            var answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.notes.rawValue, answerType: .string)
+            let answerResult = RSDAnswerResultObject(identifier: ResultIdentifier.notes.rawValue, answerType: .string)
             answerResult.value = newValue
             loggedResult.appendInputResults(with: answerResult)
         }
@@ -371,12 +376,12 @@ open class SBASymptomTableItem : RSDModalStepTableItem {
 }
 
 /// The symptom table item is tracked using the result object.
-public struct SBASymptomResult : Codable, RSDScoringResult {
+public struct SBASymptomResult : Codable, RSDScoringResult, SerializableResultData {
     private enum CodingKeys : String, CodingKey {
-        case identifier, text, loggedDate, timeZone, severity, duration, medicationTiming, notes
+        case identifier, text, loggedDate, timeZone, severity, duration, medicationTiming, notes, serializableType = "type"
     }
     
-    public let type: RSDResultType = .symptom
+    public let serializableType: SerializableResultType = .symptom
     
     public let identifier: String
     
@@ -475,6 +480,7 @@ public struct SBASymptomResult : Codable, RSDScoringResult {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.identifier, forKey: .identifier)
+        try container.encode(self.serializableType, forKey: .serializableType)
         try container.encode(self.text, forKey: .text)
         if let loggedDate = self.loggedDate {
             let formatter = encoder.factory.timestampFormatter.copy() as! DateFormatter
@@ -490,6 +496,10 @@ public struct SBASymptomResult : Codable, RSDScoringResult {
         try container.encodeIfPresent(self.medicationTiming, forKey: .medicationTiming)
         try container.encodeIfPresent(self.notes, forKey: .notes)
     }
+    
+    public func deepCopy() -> SBASymptomResult {
+        self
+    }
 }
 
 /// Wrapper for the clientData from a report.
@@ -498,11 +508,11 @@ public struct SBASymptomReportData : Codable {
 }
 
 /// Wrapper for a collection of symptoms as a result.
-public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
-    public let type: RSDResultType = .symptomCollection
+public struct SBASymptomCollectionResult : Codable, RSDCollectionResult, SerializableResultData {
+    public let serializableType: SerializableResultType = .symptomCollection
     
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, symptomResults = "items"
+        case identifier, serializableType = "type", startDate, endDate, symptomResults = "items"
     }
     
     public let identifier: String
@@ -517,7 +527,7 @@ public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
     public var symptomResults: [SBASymptomResult] = []
     
     /// A wrapper for the input results.
-    public var inputResults: [RSDResult] {
+    public var children: [ResultData] {
         get {
             return symptomResults
         }
@@ -528,6 +538,10 @@ public struct SBASymptomCollectionResult : Codable, RSDCollectionResult {
     
     public init(identifier: String) {
         self.identifier = identifier
+    }
+    
+    public func deepCopy() -> SBASymptomCollectionResult {
+        self
     }
 }
 

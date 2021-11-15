@@ -2,7 +2,7 @@
 //  SBATrackedSelectionDataSource.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -33,7 +33,7 @@
 
 import Foundation
 import Research
-
+import BridgeApp
 
 /// `SBATrackedSelectionDataSource` is a concrete implementation of the `RSDTableDataSource` protocol
 /// that is designed to be used with a `SBATrackedItemsStep`.

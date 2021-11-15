@@ -90,15 +90,7 @@ public final class SBAParticipantManager : NSObject {
             }
             let authenticated = info.authenticated?.boolValue ?? false
             let consented = info.consentedValue
-            let hasChanges = (authenticated && !self.isAuthenticated) ||
-                consented != self.isConsented ||
-                !RSDObjectEquality(info.studyParticipant.dataGroups, self.studyParticipant?.dataGroups)
-            self.studyParticipant = info.studyParticipant
-            self.isAuthenticated = authenticated
-            self.isConsented = consented
-            if hasChanges {
-                self.reload(allFuture: true)
-            }
+            self.updateParticipant(authenticated: authenticated, consented: consented, participant: info.studyParticipant)
         }
         
         // Add an observer that a schedule manager has updated the scheduled activities. Often updating the
@@ -110,6 +102,18 @@ public final class SBAParticipantManager : NSObject {
         // Add an observer the app entering the foreground to check for whether or not "today" is still valid.
         NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: self.updateQueue) { (notification) in
             self.reload(allFuture: false)
+        }
+    }
+    
+    internal func updateParticipant(authenticated: Bool, consented: Bool, participant: SBBStudyParticipant) {
+        let hasChanges = (authenticated && !self.isAuthenticated) ||
+            consented != self.isConsented ||
+            !RSDObjectEquality(participant.dataGroups, self.studyParticipant?.dataGroups)
+        self.studyParticipant = participant
+        self.isAuthenticated = authenticated
+        self.isConsented = consented
+        if hasChanges {
+            self.reload(allFuture: true)
         }
     }
     

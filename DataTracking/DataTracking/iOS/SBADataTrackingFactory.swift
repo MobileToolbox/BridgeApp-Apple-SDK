@@ -2,7 +2,7 @@
 //  SBADataTrackingFactory.swift
 //  DataTracking (iOS)
 //
-//  Copyright © 2018-2019 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -33,15 +33,17 @@
 
 import Foundation
 import Research
+import ResearchUI
+import JsonModel
 import BridgeApp
 
-extension RSDStepNavigatorType {
+extension RSDTaskType {
     
     /// Defaults to creating a `SBAMedicationTrackingStepNavigator`.
-    public static let medicationTracking: RSDStepNavigatorType = "medicationTracking"
+    public static let medicationTracking: RSDTaskType = "medicationTracking"
     
     /// Defaults to creating a `SBATrackedItemsStepNavigator`.
-    public static let tracking: RSDStepNavigatorType = "tracking"
+    public static let tracking: RSDTaskType = "tracking"
 }
 
 extension RSDStepType {
@@ -68,40 +70,42 @@ extension RSDStepType {
     public static let medicationTracking: RSDStepType = "medicationTracking"
 }
 
-extension RSDResultType {
+extension SerializableResultType {
     
-    public static let medication: RSDResultType = "medication"
+    public static let medication: SerializableResultType = "medication"
     
-    public static let medicationDetails: RSDResultType = "medicationDetails"
+    public static let medicationDetails: SerializableResultType = "medicationDetails"
 }
+
+fileprivate var _didLoad: Bool = false
 
 open class SBADataTrackingFactory : SBAFactory {
     
-    /// Override to implement custom step navigators.
-    override open func decodeStepNavigator(from decoder: Decoder, with type: RSDStepNavigatorType) throws -> RSDStepNavigator {
-        switch type {
-        case .medicationTracking:
-            return try SBAMedicationTrackingStepNavigator(from: decoder)
-        case .tracking:
-            return try SBATrackedItemsStepNavigator(from: decoder)
-        default:
-            return try super.decodeStepNavigator(from: decoder, with: type)
-        }
-    }
-    
-    /// Override to implement custom step types.
-    override open func decodeStep(from decoder:Decoder, with type:RSDStepType) throws -> RSDStep? {
-        switch (type) {
-        case .selection:
-            return try SBATrackedSelectionStepObject(from: decoder)
-        case .logging:
-            return try SBATrackedItemsLoggingStepObject(from: decoder)
-        case .symptomLogging:
-            return try SBASymptomLoggingStepObject(from: decoder)
-        case .medicationReminders:
-            return try SBATrackedItemRemindersStepObject(from: decoder)
-        default:
-            return try super.decodeStep(from: decoder, with: type)
+    public required init() {
+        super.init()
+        
+        // Add steps to factory serializer
+        self.stepSerializer.add(SBATrackedSelectionStepObject(identifier: "example", type: nil))
+        self.stepSerializer.add(SBATrackedItemsLoggingStepObject(identifier: "example", type: nil))
+        self.stepSerializer.add(SBASymptomLoggingStepObject(identifier: "example", type: nil))
+        self.stepSerializer.add(SBATrackedItemRemindersStepObject(identifier: "example", type: nil))
+        self.stepSerializer.add(SBATrackedMedicationReviewStepObject(identifier: "example", type: nil))
+        
+        // Add tasks to serializer
+        self.taskSerializer.add(SBAMedicationTrackingStepNavigator())
+        self.taskSerializer.add(SBATrackedItemsStepNavigator())
+        
+        if !_didLoad {
+            _didLoad = true
+            
+            // Add the localization bundle if this is a first init()
+            let localizationBundle = LocalizationBundle(Bundle.module)
+            Localization.insert(bundle: localizationBundle, at: 1)
+            
+            // Set up the resource loader if its nil.
+            if resourceLoader == nil {
+                resourceLoader = ResourceLoader()
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 //  ScheduleFilteringTests.swift
 //  BridgeAppTests
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -33,6 +33,7 @@
 
 import XCTest
 import Research
+import BridgeSDK
 @testable import BridgeApp
 
 class ScheduleFilteringTests: SBAScheduleManagerTests {
@@ -450,9 +451,7 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         scheduleManager.loadScheduledActivities()
-        waitForExpectations(timeout: 2) { (err) in
-            print(String(describing: err))
-        }
+        wait(for: [expect], timeout: 2)
         
         XCTAssertNil(scheduleManager.updateFailed_error)
         XCTAssertNotNil(scheduleManager.update_fetchedActivities)
@@ -467,10 +466,8 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         scheduleManager.loadScheduledActivities()
-        waitForExpectations(timeout: 2) { (err) in
-            print(String(describing: err))
-        }
-        
+        wait(for: [expect], timeout: 2)
+
         XCTAssertNil(scheduleManager.updateFailed_error)
         XCTAssertNotNil(scheduleManager.update_fetchedActivities)
     }
@@ -484,10 +481,8 @@ class ScheduleFilteringTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         scheduleManager.loadScheduledActivities()
-        waitForExpectations(timeout: 2) { (err) in
-            print(String(describing: err))
-        }
-        
+        wait(for: [expect], timeout: 2)
+
         XCTAssertNil(scheduleManager.updateFailed_error)
         XCTAssertNotNil(scheduleManager.update_fetchedActivities)
     }

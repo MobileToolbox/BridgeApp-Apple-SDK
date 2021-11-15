@@ -2,7 +2,7 @@
 //  SBATrackedItemRemindersStepObject.swift
 //  BridgeApp (iOS)
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -34,6 +34,7 @@
 import Foundation
 import Research
 import ResearchUI
+import JsonModel
 import BridgeApp
 import BridgeSDK
 
@@ -41,22 +42,26 @@ import BridgeSDK
 /// that contains a custom cell type that will launch the input fields of the step.
 ///
 /// - seealso: `RSDFormUIStepObject`, `RSDStepViewControllerVendor`
-open class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewControllerVendor {
+public final class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewControllerVendor {
     
     enum CodingKeys : String, CodingKey {
         case modalTitle, descriptionFormat, noReminderSetText
     }
     
+    public override class func defaultType() -> RSDStepType {
+        .medicationReminders
+    }
+    
     public let modalIdentifier = "ReminderModal"
     
     /// The title of the modal for selecting reminders.
-    public var modalTitle: String
+    public var modalTitle: String = Localization.localizedString("TRACKED_ITEM_REMINDER_MODAL_TITLE")
     
     /// The string format for the description of the selected reminder values.
-    public var descriptionFormat: String
+    public var descriptionFormat: String = "%@"
     
     /// The string format for the description of the selected reminder values.
-    public var noReminderSetText: String
+    public var noReminderSetText: String = Localization.localizedString("TRACKED_REMINDER_CHOICES_NONE_SET")
     
     /// The first input field's prompt.
     var prompt: String? {
@@ -66,43 +71,32 @@ open class SBATrackedItemRemindersStepObject: RSDFormUIStepObject, RSDStepViewCo
     /// The result for the reminders.
     var result: SBATrackedItemsResult?
     
-    public required init(from decoder: Decoder) throws {
+    public override func decode(from decoder: Decoder, for deviceType: RSDDeviceType?) throws {
+        try super.decode(from: decoder, for: deviceType)
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let modalTitle = try container.decodeIfPresent(String.self, forKey: .modalTitle)
-        self.modalTitle = modalTitle ?? Localization.localizedString("TRACKED_ITEM_REMINDER_MODAL_TITLE")
-        let descriptionFormat = try container.decodeIfPresent(String.self, forKey: .descriptionFormat)
-        self.descriptionFormat = descriptionFormat ?? "%@"
-        let noReminderSetText = try container.decodeIfPresent(String.self, forKey: .noReminderSetText)
-        self.noReminderSetText = noReminderSetText ?? Localization.localizedString("TRACKED_REMINDER_CHOICES_NONE_SET")
-        try super.init(from: decoder)
-    }
-    
-    public required init(identifier: String, type: RSDStepType?) {
-        self.modalTitle = Localization.localizedString("TRACKED_ITEM_REMINDER_MODAL_TITLE")
-        self.descriptionFormat = "%@"
-        self.noReminderSetText = Localization.localizedString("TRACKED_REMINDER_CHOICES_NONE_SET")
-        super.init(identifier: identifier, type: type)
-    }
-    
-    override public init(identifier: String, inputFields: [RSDInputField], type: RSDStepType? = nil) {
-        self.modalTitle = Localization.localizedString("TRACKED_ITEM_REMINDER_MODAL_TITLE")
-        self.descriptionFormat = "%@"
-        self.noReminderSetText = Localization.localizedString("TRACKED_REMINDER_CHOICES_NONE_SET")
-        super.init(identifier: identifier, type: type ?? .form)
+        if let modalTitle = try container.decodeIfPresent(String.self, forKey: .modalTitle) {
+            self.modalTitle = modalTitle
+        }
+        if let descriptionFormat = try container.decodeIfPresent(String.self, forKey: .descriptionFormat) {
+            self.descriptionFormat = descriptionFormat
+        }
+        if let noReminderSetText = try container.decodeIfPresent(String.self, forKey: .noReminderSetText) {
+            self.noReminderSetText = noReminderSetText
+        }
     }
     
     /// Override to return a `SBATrackedItemReminderDataSource`.
-    open override func instantiateDataSource(with parent: RSDPathComponent?, for supportedHints: Set<RSDFormUIHint>) -> RSDTableDataSource?  {
+    public override func instantiateDataSource(with parent: RSDPathComponent?, for supportedHints: Set<RSDFormUIHint>) -> RSDTableDataSource?  {
         return SBATrackedItemReminderDataSource(step: self, parent: parent, supportedHints: supportedHints)
     }
     
     #if !os(watchOS)
-    open func instantiateViewController(with parent: RSDPathComponent?) -> (UIViewController & RSDStepController)? {
+    public func instantiateViewController(with parent: RSDPathComponent?) -> (UIViewController & RSDStepController)? {
         return SBATrackedItemRemindersStepViewController(step: self, parent: parent)
     }
     #endif
     
-    override open func copyInto(_ copy: RSDUIStepObject) {
+    override public func copyInto(_ copy: RSDUIStepObject) {
         super.copyInto(copy)
         guard let subclassCopy = copy as? SBATrackedItemRemindersStepObject else {
             assertionFailure("Superclass implementation of the `copy(with:)` protocol should return an instance of this class.")
@@ -167,7 +161,7 @@ open class SBATrackedItemReminderDataSource : RSDFormStepDataSourceObject {
     }
     
     func currentAnswers() -> [Int]? {
-        if let answerResult = self.collectionResult().inputResults.last as? RSDAnswerResultObject {
+        if let answerResult = self.collectionResult().children.last as? RSDAnswerResultObject {
             if let array = answerResult.value as? [Int] {
                 return array
             }
@@ -188,9 +182,9 @@ open class SBATrackedItemReminderDataSource : RSDFormStepDataSourceObject {
     
     func modalTaskViewController() -> RSDTaskViewController? {
         guard let reminderChoicesStep = self.reminderStep?.reminderChoicesStep() else { return nil }
-        var navigator = RSDConditionalStepNavigatorObject(with: [reminderChoicesStep])
-        navigator.progressMarkers = []
-        let task = RSDTaskObject(identifier: reminderChoicesStep.identifier, stepNavigator: navigator)
+        let task = AssessmentTaskObject(identifier: reminderChoicesStep.identifier,
+                                        steps: [reminderChoicesStep],
+                                        progressMarkers: [])
         let taskViewModel = RSDTaskViewModel(task: task)
         if let result = self.collectionResult() as? RSDCollectionResultObject {
             self.taskResult.appendStepHistory(with: result.copy(with: reminderChoicesStep.identifier))

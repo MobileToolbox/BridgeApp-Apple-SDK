@@ -2,7 +2,7 @@
 //  CodableTrackedDataTests.swift
 //  BridgeAppTests
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,6 +35,8 @@ import XCTest
 @testable import BridgeApp
 @testable import DataTracking
 import Research
+import JsonModel
+import BridgeSDK
 
 let testFactory: RSDFactory = {
     RSDFactory.shared = SBADataTrackingFactory()
@@ -321,6 +323,7 @@ class CodableTrackedDataTests: XCTestCase {
         let json = """
         {
             "identifier":"Test",
+            "type":"tracking",
             "items": [
                         { "identifier": "itemA1", "sectionIdentifier" : "a" },
                         { "identifier": "itemA2", "sectionIdentifier" : "a" },
@@ -348,6 +351,7 @@ class CodableTrackedDataTests: XCTestCase {
         let json = """
         {
             "identifier":"Test",
+            "type":"medicationTracking",
             "items": [
                         { "identifier": "itemA1", "sectionIdentifier" : "a" },
                         { "identifier": "itemA2", "sectionIdentifier" : "a" },
@@ -402,7 +406,7 @@ class CodableTrackedDataTests: XCTestCase {
         """.data(using: .utf8)! // our data in native (JSON) format
         
         do {
-            let object = try decoder.decode(RSDTaskObject.self, from: json)
+            let object = try decoder.decode(SBATrackedItemsStepNavigator.self, from: json)
             XCTAssertEqual(object.identifier, "logging")
             guard let navigator = object.stepNavigator as? SBATrackedItemsStepNavigator else {
                 XCTFail("Failed to decode the step navigator. Exiting.")
@@ -502,8 +506,8 @@ class CodableTrackedDataTests: XCTestCase {
         result.detail = "Detail string"
         result.loggedDate = Date()
         let values = [("a", 1), ("b", 2), ("c", 3)]
-        result.inputResults = values.map { (value) -> RSDAnswerResult in
-            var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
+        result.children = values.map { (value) -> RSDAnswerResult in
+            let answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
         }
@@ -535,7 +539,7 @@ class CodableTrackedDataTests: XCTestCase {
     }
     
     func testTriggersJSON() {
-        let resourceTransformer = RSDResourceTransformerObject(resourceName: "Triggers")
+        let resourceTransformer = RSDResourceTransformerObject(resourceName: "Triggers", bundle: Bundle.module)
         do {
             let task = try testFactory.decodeTask(with: resourceTransformer)
             guard let navigator = task.stepNavigator as? SBATrackedItemsStepNavigator else {
@@ -560,7 +564,7 @@ class CodableTrackedDataTests: XCTestCase {
     }
     
     func testSymptomsJSON() {
-        let resourceTransformer = RSDResourceTransformerObject(resourceName: "Symptoms")
+        let resourceTransformer = RSDResourceTransformerObject(resourceName: "Symptoms", bundle: Bundle.module)
         do {
             let task = try testFactory.decodeTask(with: resourceTransformer)
             guard let navigator = task.stepNavigator as? SBATrackedItemsStepNavigator else {
@@ -1451,14 +1455,16 @@ class CodableTrackedDataTests: XCTestCase {
             let expectedItems: NSArray = [
                 [
                     "text" : "Amnesia",
-                    "identifier" : "Amnesia"
+                    "identifier" : "Amnesia",
+                    "type" : "symptom"
                 ],
                 [
                     "loggedDate" : "2019-07-29T14:16:24.561-06:00",
                     "timeZone" : "GMT-0600",
                     "severity" : 3,
                     "text" : "Anger",
-                    "identifier" : "Anger"
+                    "identifier" : "Anger",
+                    "type" : "symptom"
                 ],
                 [
                     "loggedDate" : "2019-07-29T14:16:14.711-06:00",
@@ -1467,7 +1473,8 @@ class CodableTrackedDataTests: XCTestCase {
                     "duration" : "DURATION_CHOICE_NOW",
                     "text" : "Hallucinations",
                     "medicationTiming" : "pre-medication",
-                    "severity" : 2
+                    "severity" : 2,
+                    "type" : "symptom"
                 ]
             ]
             
@@ -1485,7 +1492,7 @@ class CodableTrackedDataTests: XCTestCase {
                 XCTAssertEqual(first.text, "Amnesia")
                 XCTAssertNil(first.loggedDate)
                 XCTAssertEqual(first.timeZone, TimeZone.current)
-                XCTAssertEqual(first.inputResults.count, 0)
+                XCTAssertEqual(first.children.count, 0)
             }
             
             if result.loggingItems.count >= 2 {
@@ -1494,7 +1501,7 @@ class CodableTrackedDataTests: XCTestCase {
                 XCTAssertEqual(second.text, "Anger")
                 XCTAssertNil(second.loggedDate)
                 XCTAssertEqual(second.timeZone, TimeZone.current)
-                XCTAssertEqual(second.inputResults.count, 0)
+                XCTAssertEqual(second.children.count, 0)
             }
             
             if let third = result.loggingItems.last {
@@ -1502,7 +1509,7 @@ class CodableTrackedDataTests: XCTestCase {
                 XCTAssertEqual(third.text, "Hallucinations")
                 XCTAssertNil(third.loggedDate)
                 XCTAssertEqual(third.timeZone, TimeZone.current)
-                XCTAssertEqual(third.inputResults.count, 0)
+                XCTAssertEqual(third.children.count, 0)
             }
         } catch let err {
             XCTFail("Failed to decode/encode object: \(err)")
@@ -1519,14 +1526,14 @@ class CodableTrackedDataTests: XCTestCase {
                                                       detail: nil,
                                                       loggedDate: NSDate(iso8601String: "2019-07-29T14:16:24.561-06:00") as Date,
                                                       timeZone: TimeZone(identifier: "America/Denver")!,
-                                                      inputResults: [
+                                                      children: [
                                                         RSDAnswerResultObject(identifier: "severity", answerType: .integer, value: 3)])
             let item3 = SBATrackedLoggingResultObject(identifier: "Hallucinations",
                                                       text: "Hallucinations",
                                                       detail: nil,
                                                       loggedDate: NSDate(iso8601String: "2019-07-29T14:16:14.711-06:00") as Date,
                                                       timeZone: TimeZone(identifier: "America/Denver")!,
-                                                      inputResults: [
+                                                      children: [
                                                         RSDAnswerResultObject(identifier: "severity", answerType: .integer, value: 2),
                                                         RSDAnswerResultObject(identifier: "duration", answerType: .string, value: "DURATION_CHOICE_NOW"),
                                                         RSDAnswerResultObject(identifier: "medicationTiming", answerType: .string, value: "pre-medication")])
@@ -1535,7 +1542,7 @@ class CodableTrackedDataTests: XCTestCase {
                                                       detail: nil,
                                                       loggedDate: nil,
                                                       timeZone: TimeZone.current,
-                                                      inputResults: [
+                                                      children: [
                                                         RSDAnswerResultObject(identifier: "medicationTiming", answerType: .string, value: "pre-medication")])
             trackedItems.loggingItems = [item1, item2, item3, item4]
             
@@ -1723,11 +1730,13 @@ class CodableTrackedDataTests: XCTestCase {
                     "loggedDate" : "2019-10-03T15:26:57.679-06:00",
                     "timeZone" : "America/Denver",
                     "identifier" : "Humidity",
-                    "text" : "Humidity"
+                    "text" : "Humidity",
+                    "type" : "trigger"
                 ],
                 [
                     "text" : "Cold",
-                    "identifier" : "Cold"
+                    "identifier" : "Cold",
+                    "type" : "trigger"
                 ]
             ]
             

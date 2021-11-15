@@ -2,7 +2,7 @@
 //  SBATriggerResult.swift
 //  BridgeApp (iOS)
 //
-//  Copyright © 2019 Sage Bionetworks. All rights reserved.
+//  Copyright © 2019-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -34,12 +34,13 @@
 import Foundation
 import JsonModel
 import Research
+import BridgeApp
 
-public struct SBATriggerResult : RSDResult, Codable, RSDScoringResult {
-    public let type: RSDResultType = .trigger
+public struct SBATriggerResult : SerializableResultData, Codable, RSDScoringResult {
+    public let serializableType: SerializableResultType = .trigger
     
     private enum CodingKeys : String, CodingKey {
-        case identifier, loggedDate, text, timeZone
+        case identifier, loggedDate, text, timeZone, serializableType = "type"
     }
     
     public let identifier: String
@@ -98,6 +99,7 @@ public struct SBATriggerResult : RSDResult, Codable, RSDScoringResult {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.identifier, forKey: .identifier)
+        try container.encode(self.serializableType, forKey: .serializableType)
         try container.encode(self.text, forKey: .text)
         if let loggedDate = self.loggedDate {
             let formatter = encoder.factory.timestampFormatter.copy() as! DateFormatter
@@ -107,15 +109,19 @@ public struct SBATriggerResult : RSDResult, Codable, RSDScoringResult {
             try container.encode(self.timeZone.identifier, forKey: .timeZone)
         }
     }
+    
+    public func deepCopy() -> SBATriggerResult {
+        self
+    }
 }
 
 
 /// Wrapper for a collection of symptoms as a result.
-public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
-    public let type: RSDResultType = .triggerCollection
+public struct SBATriggerCollectionResult : Codable, RSDCollectionResult, SerializableResultData {
+    public let serializableType: SerializableResultType = .triggerCollection
     
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, triggerResults = "items"
+        case identifier, serializableType = "type", startDate, endDate, triggerResults = "items"
     }
     
     /// The identifier for the result.
@@ -131,7 +137,7 @@ public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
     public var triggerResults: [SBATriggerResult] = []
     
     /// A wrapper for the codable results.
-    public var inputResults: [RSDResult] {
+    public var children: [ResultData] {
         get {
             return triggerResults
         }
@@ -142,6 +148,10 @@ public struct SBATriggerCollectionResult : Codable, RSDCollectionResult {
     
     public init(identifier: String) {
         self.identifier = identifier
+    }
+    
+    public func deepCopy() -> SBATriggerCollectionResult {
+        self
     }
 }
 

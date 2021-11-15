@@ -138,7 +138,7 @@ extension SBAProfileSectionType {
 }
 
 /// A protocol for defining a profile data source.
-public protocol SBAProfileDataSource: class {
+public protocol SBAProfileDataSource: AnyObject {
     /// A unique identifier for the data source.
     var identifier: String { get }
     

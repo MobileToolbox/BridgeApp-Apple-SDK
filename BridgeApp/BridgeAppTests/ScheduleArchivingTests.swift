@@ -32,6 +32,8 @@
 //
 
 import XCTest
+import BridgeSDK
+@testable import Research_UnitTest
 @testable import BridgeApp
 @testable import Research
 import JsonModel
@@ -428,9 +430,8 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         let _ = taskController.test_stepTo("completion")
-        waitForExpectations(timeout: 2) { (err) in
-            XCTAssertNil(err)
-        }
+        wait(for: [expect], timeout: 2)
+        
         XCTAssertNotNil(taskController.handleTaskResultReady_calledWith)
         
         // Now, build the reports
@@ -508,13 +509,7 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
         
         // Check that the setup method was called as expected
         XCTAssertNotNil(tracker.setupTask_data)
-        if let json = tracker.setupTask_data?.json as? [String : JsonSerializable],
-            let dict = json as? [String : String] {
-            XCTAssertEqual(dict, ["addedInfo" : "ragu"])
-        }
-        else {
-            XCTFail("Failed to setup the task JSON. actual = \(String(describing: tracker.setupTask_data?.json))")
-        }
+        XCTAssertEqual(tracker.setupTask_data?.json as? [String : String], ["addedInfo" : "ragu"])
         
         // step to just before completion
         let _ = taskController.test_stepTo("step4")
@@ -526,9 +521,8 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
             expect.fulfill()
         }
         let _ = taskController.test_stepTo("completion")
-        waitForExpectations(timeout: 2) { (err) in
-            XCTAssertNil(err)
-        }
+        wait(for: [expect], timeout: 2)
+
         XCTAssertNotNil(taskController.handleTaskResultReady_calledWith)
         
         // Now, build the reports
@@ -694,7 +688,7 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
     func convertWithIndex(_ steps: [TestStep]) -> [TestStep] {
         return steps.enumerated().map {
             var step = $1
-            step.result = AnswerResultObject(identifier: step.identifier, value: .integer($0))
+            step.result = RSDAnswerResultObject(identifier: step.identifier, answerType: .integer, value: $0)
             return step
         }
     }
@@ -711,8 +705,8 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
         return steps.map { (inStep) -> TestStep in
             var step = inStep
             var collectionResult = RSDCollectionResultObject(identifier: step.identifier)
-            collectionResult.appendInputResults(with: AnswerResultObject(identifier: "identifier", value: .string(step.identifier)))
-            collectionResult.appendInputResults(with: AnswerResultObject(identifier: "boolean", value: .boolean(true)))
+            collectionResult.appendInputResults(with: RSDAnswerResultObject(identifier: "identifier", answerType: .string, value: step.identifier))
+            collectionResult.appendInputResults(with: RSDAnswerResultObject(identifier: "boolean", answerType: .boolean, value: true))
             step.result = collectionResult
             return step
         }
@@ -722,7 +716,7 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
         return steps.map { (inStep) -> TestStep in
             var step = inStep
             var collectionResult = RSDCollectionResultObject(identifier: step.identifier)
-            collectionResult.appendInputResults(with: AnswerResultObject(identifier: step.identifier, value: .integer(step.identifier.count)))
+            collectionResult.appendInputResults(with: RSDAnswerResultObject(identifier: step.identifier, answerType: .integer, value: step.identifier.count))
             step.result = collectionResult
             return step
         }

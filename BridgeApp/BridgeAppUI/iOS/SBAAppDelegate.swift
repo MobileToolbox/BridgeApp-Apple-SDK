@@ -50,6 +50,10 @@ open class SBAAppDelegate : RSDAppDelegate, SBBBridgeErrorUIDelegate {
         return SBABridgeConfiguration()
     }
     
+    open func instantiateRootViewController() -> UIViewController {
+        SBARootViewController(rootViewController: self.window?.rootViewController)
+    }
+    
     open override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         guard super.application(application, willFinishLaunchingWithOptions: launchOptions)
             else {
@@ -64,7 +68,7 @@ open class SBAAppDelegate : RSDAppDelegate, SBBBridgeErrorUIDelegate {
         // Replace the launch root view controller with an SBARootViewController
         // This allows transitioning between root view controllers while a lock screen
         // or onboarding view controller is being presented modally.
-        self.window?.rootViewController = SBARootViewController(rootViewController: self.window?.rootViewController)
+        self.window?.rootViewController = instantiateRootViewController()
         
         return true
     }

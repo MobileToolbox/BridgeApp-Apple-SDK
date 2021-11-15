@@ -1,4 +1,5 @@
 // swift-tools-version:5.3
+// swift-tools-version:5.4
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -18,50 +19,107 @@ let package = Package(
         .library(
             name: "BridgeAppUI",
             targets: ["BridgeAppUI"]),
+        .library(
+            name: "BridgeApp_UnitTest",
+            targets: ["BridgeApp_UnitTest"]),
+        .library(
+            name: "DataTracking",
+            targets: ["DataTracking"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(
             name: "SageResearch",
             url: "https://github.com/Sage-Bionetworks/SageResearch.git",
-            from: "4.1.0"),
+            from: "4.2.4"),
         .package(
             name: "BridgeSDK",
             url: "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
-            from: "4.4.83"),
+            from: "4.4.85"),
         .package(
             name: "JsonModel",
             url: "https://github.com/Sage-Bionetworks/JsonModel-Swift.git",
-            from: "1.2.0"),
+            from: "1.2.3"),
     ],
     targets: [
 
         .target(
             name: "BridgeApp",
             dependencies: [
+                .product(name: "BridgeSDK", package: "BridgeSDK"),
                 .product(name: "Research", package: "SageResearch"),
                 .product(name: "ResearchUI", package: "SageResearch"),
-                "BridgeSDK",
                 "JsonModel",
             ],
             path: "BridgeApp/BridgeApp/iOS",
             resources: [
                 .process("Localization"),
-            ]
-            ),
-        
+            ]),
+
         .target(
             name: "BridgeAppUI",
             dependencies: [
+                "BridgeApp",
                 .product(name: "Research", package: "SageResearch"),
                 .product(name: "ResearchUI", package: "SageResearch"),
-                "BridgeApp",
-                "BridgeSDK",
+                .product(name: "BridgeSDK", package: "BridgeSDK"),
             ],
             path: "BridgeApp/BridgeAppUI/iOS",
             resources: [
                 .process("Resources"),
-            ]
+            ]),
+        
+        .testTarget(name: "BridgeAppTests",
+                    dependencies: [
+                        "BridgeApp",
+                        "BridgeApp_UnitTest",
+                        .product(name: "Research_UnitTest", package: "SageResearch"),
+                    ],
+                    path:"BridgeApp/BridgeAppTests",
+                    resources: [
+                        .process("Resources"),
+                    ]),
+        
+        .target(name: "BridgeApp_UnitTest",
+                dependencies: [
+                    "BridgeApp",
+                    .product(name: "BridgeSDK", package: "BridgeSDK"),
+                    "BridgeSDKSwizzle",
+                ],
+                path: "BridgeApp/BridgeApp_UnitTest"),
+    
+        .target(name: "BridgeSDKSwizzle",
+                dependencies: [
+                    .product(name: "BridgeSDK", package: "BridgeSDK"),
+                ],
+                path: "BridgeApp/BridgeSDKSwizzle/",
+                linkerSettings: [
+                    .linkedFramework("BridgeSDK")
+                ]
+               ),
+        
+        .target(name: "DataTracking",
+                dependencies: [
+                    .product(name: "Research", package: "SageResearch"),
+                    .product(name: "ResearchUI", package: "SageResearch"),
+                    "BridgeApp",
+                    "BridgeAppUI",
+                    "JsonModel",
+                ],
+                path: "DataTracking/DataTracking/iOS",
+                resources: [
+                    .process("Resources"),
+                ]
             ),
+        
+        .testTarget(name: "DataTrackingTests",
+                    dependencies: [
+                        "DataTracking",
+                        .product(name: "Research_UnitTest", package: "SageResearch"),
+                    ],
+                    path: "DataTracking/DataTrackingTests",
+                    resources: [
+                        .process("Resources"),
+                    ]),
     ]
 )

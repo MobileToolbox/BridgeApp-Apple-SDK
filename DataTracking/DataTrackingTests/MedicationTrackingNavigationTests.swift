@@ -2,7 +2,7 @@
 //  MedicationTrackingTests.swift
 //  BridgeAppTests
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,6 +35,7 @@ import XCTest
 @testable import BridgeApp
 @testable import DataTracking
 import Research
+import JsonModel
 
 class MedicationTrackingNavigationTests: XCTestCase {
     
@@ -325,7 +326,7 @@ class MedicationTrackingNavigationTests: XCTestCase {
 
 func remindersResult(reminderStep: SBATrackedItemRemindersStepObject) -> RSDCollectionResultObject {
     var result = RSDCollectionResultObject(identifier: reminderStep.identifier)
-    var answerResult = RSDAnswerResultObject(identifier: reminderStep.identifier,
+    let answerResult = RSDAnswerResultObject(identifier: reminderStep.identifier,
                                              answerType: RSDAnswerResultType(baseType: .integer,
                                                                              sequenceType: .array,
                                                                              formDataType: .collection(.multipleChoice, .integer),
@@ -333,7 +334,7 @@ func remindersResult(reminderStep: SBATrackedItemRemindersStepObject) -> RSDColl
                                                                              unit: nil,
                                                                              sequenceSeparator: nil))
     answerResult.value = [45, 60]
-    result.inputResults = [answerResult]
+    result.children = [answerResult]
     return result
 }
 

@@ -35,7 +35,7 @@ import UIKit
 import Research
 import ResearchUI
 
-protocol SBADayTimePickerViewControllerDelegate : class {
+protocol SBADayTimePickerViewControllerDelegate : AnyObject {
     func saveSelection(_ picker: SBADayTimePickerViewController)
     func cancel(_ picker: SBADayTimePickerViewController)
 }
@@ -198,6 +198,10 @@ class SBADayTimePickerViewController: UIViewController, UITableViewDelegate, UIT
         self.footerView!.nextButton!.addTarget(self, action: #selector(saveTapped(_:)), for: .touchUpInside)
         self.titleLabel.text = titleText
         self.detailLabel.isHidden = (self.pickerType == .loggedTime)
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
     }
     
     var designSystem: RSDDesignSystem? {

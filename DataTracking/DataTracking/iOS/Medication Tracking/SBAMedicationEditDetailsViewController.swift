@@ -36,7 +36,7 @@ import UIKit
 import Research
 import ResearchUI
 
-protocol SBAMedicationEditDetailsViewControllerDelegate : class {
+protocol SBAMedicationEditDetailsViewControllerDelegate : AnyObject {
     func save(_ medication: SBAMedicationAnswer, from sender: SBAMedicationEditDetailsViewController)
     func delete(_ medication: SBAMedicationAnswer, from sender: SBAMedicationEditDetailsViewController)
 }
@@ -95,6 +95,10 @@ class SBAMedicationEditDetailsViewController: UIViewController, UITableViewDeleg
     }
     
     var isFirstAppearance: Bool = true
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

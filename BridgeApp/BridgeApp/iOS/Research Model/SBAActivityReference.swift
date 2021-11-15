@@ -41,7 +41,7 @@ import MobilePassiveData
 /// `SBAActivityReference` is used to cast all the activity reference types to a
 /// common interface. This includes both compound tasks with different schema tables
 /// for each task and single tasks with a single schema table.
-public protocol SBAActivityReference : class, RSDTaskInfo {
+public protocol SBAActivityReference : AnyObject, RSDTaskInfo {
     
     /// The detailed description of the activity. This maps to the `detail` property of
     /// the `RSDTaskInfo` protocol.

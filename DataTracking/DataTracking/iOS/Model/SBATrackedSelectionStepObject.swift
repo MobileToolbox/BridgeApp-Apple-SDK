@@ -2,7 +2,7 @@
 //  SBATrackedSelectionStepObject.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,6 +35,7 @@ import Foundation
 import Research
 import BridgeApp
 import BridgeSDK
+import JsonModel
 
 /// `SBATrackedSelectionStepObject` is intended for use in selecting items from a long, sectioned list.
 /// In general, this would be the first step in setting up tracked data such as symptoms of a disease
@@ -45,6 +46,10 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     
     private enum CodingKeys: String, CodingKey {
         case items, sections
+    }
+    
+    open override class func defaultType() -> RSDStepType {
+        .selection
     }
     
     /// The shared result for review, details, and selection.
@@ -62,7 +67,7 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     /// Initializer required for `copy(with:)` implementation.
     public required init(identifier: String, type: RSDStepType?) {
         self.items = []
-        super.init(identifier: identifier, type: type ?? .selection)
+        super.init(identifier: identifier, type: type)
         commonInit()
     }
     
@@ -81,10 +86,10 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     /// - parameters:
     ///     - identifier: A short string that uniquely identifies the step.
     ///     - inputFields: The input fields used to create this step.
-    public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil, type: RSDStepType? = nil) {
+    public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
         self.items = items
         self.sections = sections
-        super.init(identifier: identifier, type: type ?? .selection)
+        super.init(identifier: identifier, type: nil)
         commonInit()
     }
 
@@ -160,7 +165,7 @@ open class SBATrackedSelectionStepObject : RSDUIStepObject, SBATrackedItemsStep 
     /// copy of the result with this step's identifier.
     ///
     /// - returns: A result for this step.
-    open override func instantiateStepResult() -> RSDResult {
+    open override func instantiateStepResult() -> ResultData {
         guard let result = self.result else {
             return SBATrackedItemsResultObject(identifier: self.identifier)
         }
@@ -304,17 +309,16 @@ public struct SBATrackedItemObject : Codable, SBATrackedItem, RSDEmbeddedIconDat
 
 
 /// Simple tracking object for the case where only the identifier is being tracked.
-public struct SBATrackedItemsResultObject : SBATrackedItemsResult, Codable, RSDNavigationResult {
-
+public struct SBATrackedItemsResultObject : SerializableResultData, SBATrackedItemsResult, Codable, RSDNavigationResult {
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, items
+        case identifier, serializableType = "type", startDate, endDate, items
     }
     
     /// The identifier associated with the task, step, or asynchronous action.
     public let identifier: String
     
     /// A String that indicates the type of the result. This is used to decode the result using a `RSDFactory`.
-    public private(set) var type: RSDResultType = "trackedItemsReview"
+    public private(set) var serializableType: SerializableResultType = "trackedItemsReview"
     
     /// The start date timestamp for the result.
     public var startDate: Date = Date()
@@ -348,8 +352,12 @@ public struct SBATrackedItemsResultObject : SBATrackedItemsResult, Codable, RSDN
         self.items = sort(selectedIdentifiers, with: items).map { RSDIdentifier(rawValue: $0) }
     }
     
-    mutating public func updateDetails(from result: RSDResult) {
+    mutating public func updateDetails(from result: ResultData) {
         // Do nothing
+    }
+    
+    public func deepCopy() -> SBATrackedItemsResultObject {
+        self
     }
 }
 

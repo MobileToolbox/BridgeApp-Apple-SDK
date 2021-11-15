@@ -33,6 +33,7 @@
 
 import XCTest
 import BridgeApp
+import BridgeSDK
 import JsonModel
 
 class JSONSerializableTests: XCTestCase {

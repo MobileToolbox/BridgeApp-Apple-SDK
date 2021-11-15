@@ -2,7 +2,7 @@
 //  SBAMedicationTrackingStepNavigator.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -39,6 +39,10 @@ import BridgeSDK
 
 open class SBAMedicationTrackingStepNavigator : SBATrackedItemsStepNavigator {
     
+    open override class func defaultType() -> RSDTaskType {
+        .medicationTracking
+    }
+    
     var medicationResult: SBAMedicationTrackingResult? {
         return self._inMemoryResult as? SBAMedicationTrackingResult
     }
@@ -60,7 +64,7 @@ open class SBAMedicationTrackingStepNavigator : SBATrackedItemsStepNavigator {
     }
     
     override open class func buildReviewStep(items: [SBATrackedItem], sections: [SBATrackedSection]?) -> SBATrackedItemsStep? {
-        return SBATrackedMedicationReviewStepObject(identifier: StepIdentifiers.review.stringValue, items: items, sections: sections, type: .review)
+        return SBATrackedMedicationReviewStepObject(identifier: StepIdentifiers.review.stringValue, items: items, sections: sections)
     }
     
     override open class func buildLoggingStep(items: [SBATrackedItem], sections: [SBATrackedSection]?) -> SBATrackedItemsStep {
@@ -426,10 +430,10 @@ extension SBAMedicationAnswer : SBAMedication {
 
 /// A medication tracking result which can be used to track the selected medications and details for each
 /// medication.
-public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionResult, RSDNavigationResult {
+public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionResult, RSDNavigationResult, SerializableResultData {
 
     private enum CodingKeys : String, CodingKey {
-        case identifier, type, startDate, endDate, medications = "items", reminders, revision, timeZone
+        case identifier, serializableType = "type", startDate, endDate, medications = "items", reminders, revision, timeZone
     }
     
     /// The identifier associated with the task, step, or asynchronous action.
@@ -439,7 +443,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
     public private(set) var revision: Int?
     
     /// A String that indicates the type of the result. This is used to decode the result using a `RSDFactory`.
-    public private(set) var type: RSDResultType = .medication
+    public private(set) var serializableType: SerializableResultType = .medication
     
     /// The start date timestamp for the result.
     public var startDate: Date = Date()
@@ -481,7 +485,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.type = .medication
+        self.serializableType = .medication
         
         // For medications, the encoded results do not include these values by default
         // because they are ignored in favor of the timestamps.
@@ -513,12 +517,16 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         var copy = SBAMedicationTrackingResult(identifier: identifier)
         copy.startDate = self.startDate
         copy.endDate = self.endDate
-        copy.type = self.type
+        copy.serializableType = self.serializableType
         copy.medications = self.medications
         copy.reminders = self.reminders
         copy.revision = self.revision
         copy.timeZone = self.timeZone
         return copy
+    }
+    
+    public func deepCopy() -> SBAMedicationTrackingResult {
+        self.copy(with: self.identifier)
     }
     
     mutating public func updateSelected(to selectedIdentifiers: [String]?, with items: [SBATrackedItem]) {
@@ -548,7 +556,7 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         self.medications = meds
     }
     
-    mutating public func updateDetails(from result: RSDResult) {
+    mutating public func updateDetails(from result: ResultData) {
         if let medsResult = result as? SBAMedicationTrackingResult {
             self.medications = medsResult.medications
         }
@@ -620,8 +628,8 @@ public struct SBAMedicationTrackingResult : Codable, SBATrackedItemsCollectionRe
         self.medications.insert(medication, at: idx)
     }
     
-    mutating func updateReminders(from result: RSDResult) {
-        let aResult = ((result as? RSDCollectionResult)?.inputResults.first ?? result) as? RSDAnswerResult
+    mutating func updateReminders(from result: ResultData) {
+        let aResult = ((result as? RSDCollectionResult)?.children.first ?? result) as? RSDAnswerResult
         if let array = aResult?.value as? [Int] {
             self.reminders = array
         }

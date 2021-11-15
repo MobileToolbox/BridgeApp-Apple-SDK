@@ -2,7 +2,7 @@
 //  SBATrackedLoggingDataSource.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -33,7 +33,8 @@
 
 import Foundation
 import Research
-
+import JsonModel
+import BridgeApp
 
 extension RSDFormUIHint {
     
@@ -146,7 +147,7 @@ open class SBATrackedLoggingDataSource : SBATrackingDataSource, RSDModalStepData
     }
     
     /// Build the answer object appropriate to this tracked logging item.
-    open func buildAnswer(for loggingItem: SBATrackedLoggingTableItem) -> RSDResult {
+    open func buildAnswer(for loggingItem: SBATrackedLoggingTableItem) -> ResultData {
         var loggedResult = SBATrackedLoggingResultObject(identifier: loggingItem.identifier, text: loggingItem.title, detail: loggingItem.detail)
         loggedResult.itemIdentifier = loggingItem.itemIdentifier
         loggedResult.timingIdentifier = loggingItem.timingIdentifier
@@ -165,9 +166,7 @@ open class SBATrackedLoggingDataSource : SBATrackingDataSource, RSDModalStepData
             return nil
         }
 
-        var navigator = RSDConditionalStepNavigatorObject(with: [step])
-        navigator.progressMarkers = []
-        let task = RSDTaskObject(identifier: step.identifier, stepNavigator: navigator)
+        let task = AssessmentTaskObject(identifier: step.identifier, steps: [step], progressMarkers: [])
         let taskViewModel = SBAModalTaskViewModel(task: task, parentViewModel: self)
         if let previousResult = self.previousResult(for: tableItem, with: step) {
             taskViewModel.append(previousResult: previousResult)
@@ -187,7 +186,7 @@ open class SBATrackedLoggingDataSource : SBATrackingDataSource, RSDModalStepData
         return step
     }
     
-    open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> RSDResult? {
+    open func previousResult(for tableItem: RSDModalStepTableItem, with step: RSDStep) -> ResultData? {
         return self.trackingResult().copy(with: step.identifier)
     }
     

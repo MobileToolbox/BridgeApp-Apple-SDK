@@ -33,6 +33,8 @@
 
 import Foundation
 import Research
+import MobilePassiveData
+import JsonModel
 
 /// A wrapper for displaying a single step of the medication tracking.
 protocol SBAMedicationFollowupTask : RSDTask, RSDStepNavigator, RSDTrackingTask {
@@ -64,7 +66,7 @@ extension SBAMedicationFollowupTask {
         return nil
     }
     
-    public var asyncActions: [RSDAsyncActionConfiguration]? { return nil }
+    public var asyncActions: [AsyncActionConfiguration]? { return nil }
     
     public func validate() throws {
     }
@@ -125,7 +127,7 @@ extension SBAMedicationFollowupTask {
     }
     
     /// Not used. Always return `false`.
-    public func shouldSkipStep(_ step: RSDStep) -> (shouldSkip: Bool, stepResult: RSDResult?) {
+    public func shouldSkipStep(_ step: RSDStep) -> (shouldSkip: Bool, stepResult: ResultData?) {
         return (false, nil)
     }
 }

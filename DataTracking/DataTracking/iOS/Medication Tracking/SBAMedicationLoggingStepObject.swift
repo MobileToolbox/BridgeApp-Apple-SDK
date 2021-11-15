@@ -2,7 +2,7 @@
 //  SBAMedicationLoggingStepObject.swift
 //  BridgeApp
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -86,8 +86,8 @@ open class SBAMedicationLoggingStepObject : SBATrackedSelectionStepObject {
         _commonInit()
     }
     
-    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil, type: RSDStepType? = nil) {
-        super.init(identifier: identifier, items: items, sections: sections, type: type)
+    override public init(identifier: String, items: [SBATrackedItem], sections: [SBATrackedSection]? = nil) {
+        super.init(identifier: identifier, items: items, sections: sections)
         _commonInit()
     }
     

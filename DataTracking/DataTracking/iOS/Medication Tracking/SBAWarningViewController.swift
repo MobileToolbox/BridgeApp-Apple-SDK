@@ -36,7 +36,7 @@ import Research
 import ResearchUI
 import UIKit
 
-protocol SBAWarningViewControllerDelegate : class {
+protocol SBAWarningViewControllerDelegate : AnyObject {
     func cancel(_ viewController: SBAWarningViewController)
     func removeItem(_ viewController: SBAWarningViewController)
 }
@@ -76,6 +76,10 @@ class SBAWarningViewController : UIViewController {
     
     @IBAction func nextTapped(_ sender: Any) {
         delegate?.removeItem(self)
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        .portrait
     }
     
     override func viewDidLoad() {

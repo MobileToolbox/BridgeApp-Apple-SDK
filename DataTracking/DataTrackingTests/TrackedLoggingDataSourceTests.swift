@@ -2,7 +2,7 @@
 //  TrackedLoggingDataSourceTests.swift
 //  BridgeAppTests
 //
-//  Copyright © 2018 Sage Bionetworks. All rights reserved.
+//  Copyright © 2018-2021 Sage Bionetworks. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without modification,
 // are permitted provided that the following conditions are met:
@@ -35,6 +35,7 @@ import XCTest
 @testable import BridgeApp
 @testable import DataTracking
 import Research
+import JsonModel
 import NSLocaleSwizzle
 
 class TrackedLoggingDataSourceTests: XCTestCase {
@@ -268,8 +269,8 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         var resultFoo = SBATrackedLoggingResultObject(identifier: "foo")
         resultFoo.loggedDate = Date()
         let fooValues = [("a", 1), ("b", 2), ("c", 3)]
-        resultFoo.inputResults = fooValues.map { (value) -> RSDAnswerResult in
-            var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
+        resultFoo.children = fooValues.map { (value) -> RSDAnswerResult in
+            let answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
         }
@@ -277,8 +278,8 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         var resultGoo = SBATrackedLoggingResultObject(identifier: "goo")
         resultGoo.loggedDate = Date()
         let gooValues = [("a", 4), ("b", 5), ("c", 6)]
-        resultGoo.inputResults = gooValues.map { (value) -> RSDAnswerResult in
-            var answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
+        resultGoo.children = gooValues.map { (value) -> RSDAnswerResult in
+            let answer = RSDAnswerResultObject(identifier: value.0, answerType: .integer)
             answer.value = value.1
             return answer
         }
@@ -294,7 +295,7 @@ class TrackedLoggingDataSourceTests: XCTestCase {
         if let firstResult = inMemoryResult.loggingItems.first {
             XCTAssertEqual(firstResult.identifier, "foo")
             XCTAssertEqual(firstResult.loggedDate, resultFoo.loggedDate)
-            XCTAssertEqual(firstResult.inputResults.count, 3)
+            XCTAssertEqual(firstResult.children.count, 3)
             let answerA = firstResult.findAnswerResult(with: "a")
             XCTAssertNotNil(answerA)
             XCTAssertEqual(answerA?.value as? Int, 1)
@@ -325,14 +326,13 @@ class TrackedLoggingDataSourceTests: XCTestCase {
     
     func buildDataSource() -> (RSDTableDataSource, RSDTaskViewModel?)? {
         let (items, sections) = buildMedicationItems()
-        let tracker = SBATrackedItemsStepNavigator(identifier: "Test", items: items, sections: sections)
+        let tracker = SBATrackedItemsStepNavigator(identifier: "loggingTest", items: items, sections: sections)
         var result = SBATrackedLoggingCollectionResultObject(identifier: "selection")
         result.updateSelected(to: ["medA2", "medB1", "medC1"], with: items)
         let dataScore = try! result.dataScore()
         tracker.previousClientData = dataScore?.toClientData()
         
-        let task = RSDTaskObject(identifier: "loggingTest", stepNavigator: tracker)
-        let taskPath = RSDTaskViewModel(task: task)
+        let taskPath = RSDTaskViewModel(task: tracker)
         
         let step = SBATrackedItemsLoggingStepObject(identifier: "logging", items: items, sections: sections)
         step.actions = [.addMore : RSDUIActionObject(buttonTitle: "Edit Items") ]

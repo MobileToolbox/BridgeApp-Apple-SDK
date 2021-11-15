@@ -134,7 +134,7 @@ extension SBASymptomLoggingStepViewController : SBASymptomLoggingCellDelegate {
     }
 }
 
-public protocol SBASymptomLoggingCellDelegate : class, NSObjectProtocol {
+public protocol SBASymptomLoggingCellDelegate : AnyObject {
     
     func didChangeSeverity(for cell: SBASymptomLoggingCell, selected: Int)
     

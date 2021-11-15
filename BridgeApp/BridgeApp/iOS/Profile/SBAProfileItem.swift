@@ -37,7 +37,7 @@ import BridgeSDK
 import JsonModel
 import Research
 
-public protocol SBAProfileItem: class, Decodable {
+public protocol SBAProfileItem: AnyObject, Decodable {
     
     /// profileKey is used to access a specific profile item, and so must be unique across all SBAProfileItems
     /// within an app.
@@ -57,7 +57,7 @@ public protocol SBAProfileItem: class, Decodable {
     var demographicKey: String { get }
     
     /// itemType specifies what type to store the profileItem's value as. Defaults to String if not otherwise specified.
-    var itemType: SBAProfileDataType { get }
+    var itemType: RSDFormDataType { get }
     
     /// Is the value read-only?
     var readonly: Bool { get }
@@ -144,8 +144,9 @@ extension SBAProfileItem {
     /// Used in the setters for the profile items to set a new value to client data.
     public func commonItemTypeToBridgeJson(val: Any?) -> SBBJSONValue {
         do {
-            let answerType = self.itemType.defaultAnswerType()
-            let json = try answerType.encodeAnswer(from: val)
+            let answerType = self.itemType.defaultAnswerResultType()
+            let ret = try answerType.jsonEncode(from: val)
+            guard let json = ret else { return NSNull() }
             return json.toClientData()
         }
         catch let err {
@@ -160,8 +161,8 @@ extension SBAProfileItem {
         }
         
         do {
-            let answerType = self.itemType.defaultAnswerType()
-            return try answerType.decodeAnswer(from: jsonVal.toJsonElement())
+            let answerType = self.itemType.defaultAnswerResultType()
+            return try answerType.jsonDecode(from: jsonVal.toJSONSerializable(), with: self.itemType)
         }
         catch let err {
             if self.itemType == .base(.string) {
@@ -224,7 +225,7 @@ public final class SBAReportProfileItem: SBAProfileItemInternal {
     }
 
     /// itemType specifies what type to store the profileItem's value as. Defaults to String if not otherwise specified.
-    public var itemType: SBAProfileDataType
+    public var itemType: RSDFormDataType
     
     /// The class type to which to deserialize this profile item.
     public var type: SBAProfileItemType
@@ -312,7 +313,7 @@ public final class SBADataGroupProfileItem: SBAProfileItemInternal {
 
     /// `itemType` specifies what type to store the profileItem's value as. Defaults to String if not
     /// otherwise specified.
-    public var itemType: SBAProfileDataType
+    public var itemType: RSDFormDataType
     
     /// The class type to which to deserialize this profile item.
     public var type: SBAProfileItemType
@@ -446,7 +447,7 @@ public final class SBAStudyParticipantProfileItem: SBAProfileItemInternal {
     public var demographicSchema: String?
     
     /// itemType specifies what type to store the profileItem's value as. Defaults to String if not otherwise specified.
-    public var itemType: SBAProfileDataType
+    public var itemType: RSDFormDataType
     
     /// Is the value read-only?
     /// Note that if the underlying SBBStudyParticipant field is effectively read-only, this
@@ -532,7 +533,7 @@ public final class SBAStudyParticipantClientDataProfileItem: SBAProfileItemInter
     public var demographicSchema: String?
     
     /// itemType specifies what type to store the profileItem's value as. Defaults to String if not otherwise specified.
-    public var itemType: SBAProfileDataType
+    public var itemType: RSDFormDataType
     
     /// The class type to which to deserialize this profile item.
     public var type: SBAProfileItemType
