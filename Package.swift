@@ -38,7 +38,7 @@ let package = Package(
         .package(
             name: "JsonModel",
             url: "https://github.com/Sage-Bionetworks/JsonModel-Swift.git",
-            from: "1.2.0"),
+            from: "1.2.3"),
     ],
     targets: [
 
