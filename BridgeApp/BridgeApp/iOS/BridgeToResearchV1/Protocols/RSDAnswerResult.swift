@@ -63,6 +63,25 @@ extension RSDAnswerResult {
     }
 }
 
+extension AnswerResultObject : RSDAnswerResult {
+    public var answerType: RSDAnswerResultType {
+        self.jsonAnswerType.map {
+            switch $0 {
+            case is AnswerTypeBoolean:
+                return .boolean
+            case is AnswerTypeDateTime:
+                return .date
+            case is AnswerTypeInteger:
+                return .integer
+            case is AnswerTypeNumber:
+                return .decimal
+            default:
+                return .string
+            }
+        } ?? .string
+    }
+}
+
 /// `RSDAnswerResultFinder` is a convenience protocol used to retrieve an answer result. It is used in
 /// survey navigation to find the result for a given input field.
 ///

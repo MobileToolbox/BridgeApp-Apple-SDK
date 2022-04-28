@@ -34,6 +34,7 @@
 import Foundation
 import BridgeSDK
 import Research
+import JsonModel
 
 open class SBAArchiveManager : NSObject, RSDDataArchiveManager {
     

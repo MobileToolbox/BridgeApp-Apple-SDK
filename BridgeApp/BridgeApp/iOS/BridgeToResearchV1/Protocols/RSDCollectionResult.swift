@@ -50,7 +50,7 @@ public extension RSDCollectionResult {  // RSDAnswerResultFinder
     /// - parameter identifier: The identifier associated with the result.
     /// - returns: The result or `nil` if not found.
     func findAnswerResult(with identifier:String ) -> RSDAnswerResult? {
-        return self.findResult(with: identifier) as? RSDAnswerResult
+        self.children.first(where: { $0.identifier == identifier }) as? RSDAnswerResult
     }
 }
 
