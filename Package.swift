@@ -31,7 +31,7 @@ let package = Package(
         .package(
             name: "SageResearch",
             url: "https://github.com/Sage-Bionetworks/SageResearch.git",
-            from: "4.2.4"),
+            "4.2.4"..<"4.4.0"),
         .package(
             name: "BridgeSDK",
             url: "https://github.com/Sage-Bionetworks/Bridge-iOS-SDK.git",
