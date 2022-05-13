@@ -696,7 +696,7 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
     func convertForInstruction(_ steps: [TestStep]) -> [TestStep] {
         return steps.map { (inStep) -> TestStep in
             var step = inStep
-            step.result = RSDResultObject(identifier: step.identifier)
+            step.result = ResultObject(identifier: step.identifier)
             return step
         }
     }
@@ -704,7 +704,7 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
     func convertForCollection(_ steps: [TestStep]) -> [TestStep] {
         return steps.map { (inStep) -> TestStep in
             var step = inStep
-            var collectionResult = RSDCollectionResultObject(identifier: step.identifier)
+            let collectionResult = CollectionResultObject(identifier: step.identifier)
             collectionResult.appendInputResults(with: RSDAnswerResultObject(identifier: "identifier", answerType: .string, value: step.identifier))
             collectionResult.appendInputResults(with: RSDAnswerResultObject(identifier: "boolean", answerType: .boolean, value: true))
             step.result = collectionResult
@@ -715,7 +715,7 @@ class ScheduleArchivingTests: SBAScheduleManagerTests {
     func convertForQuestion(_ steps: [TestStep]) -> [TestStep] {
         return steps.map { (inStep) -> TestStep in
             var step = inStep
-            var collectionResult = RSDCollectionResultObject(identifier: step.identifier)
+            let collectionResult = CollectionResultObject(identifier: step.identifier)
             collectionResult.appendInputResults(with: RSDAnswerResultObject(identifier: step.identifier, answerType: .integer, value: step.identifier.count))
             step.result = collectionResult
             return step

@@ -109,7 +109,7 @@ open class RSDFormStepDataSourceObject : RSDStepViewModel, RSDTableDataSource {
     ///
     /// - returns: The appropriate collection result.
     open func instantiateCollectionResult() -> RSDCollectionResult {
-        return RSDCollectionResultObject(identifier: step.identifier)
+        return CollectionResultObject(identifier: step.identifier)
     }
     
     /// Instantiate the appropriate answer result for the given item group.
@@ -185,7 +185,7 @@ open class RSDFormStepDataSourceObject : RSDStepViewModel, RSDTableDataSource {
     private func _answerDidChange(for itemGroup: RSDInputFieldTableItemGroup, at indexPath: IndexPath) {
         
         // Update the answers
-        var stepResult = self.collectionResult()
+        let stepResult = self.collectionResult()
         if let result = self.instantiateAnswerResult(for: itemGroup) {
             stepResult.appendInputResults(with: result)
         } else {
@@ -339,7 +339,7 @@ open class RSDFormStepDataSourceObject : RSDStepViewModel, RSDTableDataSource {
             return parentPath.previousTaskData?.json as? [String : JsonSerializable]
         }()
         
-        var stepResult = self.collectionResult()
+        let stepResult = self.collectionResult()
         var hasChanges: Bool = false
         
         func appendResults(for itemGroup: RSDInputFieldTableItemGroup) {

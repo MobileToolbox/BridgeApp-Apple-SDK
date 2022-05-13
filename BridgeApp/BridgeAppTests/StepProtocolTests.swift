@@ -91,7 +91,7 @@ class StepProtocolTests: XCTestCase {
         XCTAssertNil(inputStep.viewTheme)
         XCTAssertNil(inputStep.colorMapping)
         XCTAssertEqual(inputStep.stepType, .instruction)
-        XCTAssertTrue(inputStep.instantiateStepResult() is RSDResultObject)
+        XCTAssertTrue(inputStep.instantiateStepResult() is ResultObject)
     }
     
     func testSurveyQuestion_Configuration_Default() {
@@ -104,7 +104,7 @@ class StepProtocolTests: XCTestCase {
         XCTAssertNil(inputStep.viewTheme)
         XCTAssertNil(inputStep.colorMapping)
         XCTAssertEqual(inputStep.stepType, .bridgeV1SurveyQuestion)
-        XCTAssertTrue(inputStep.instantiateStepResult() is RSDCollectionResultObject)
+        XCTAssertTrue(inputStep.instantiateStepResult() is CollectionResultObject)
         XCTAssertTrue(inputStep.isOptional)
     }
     

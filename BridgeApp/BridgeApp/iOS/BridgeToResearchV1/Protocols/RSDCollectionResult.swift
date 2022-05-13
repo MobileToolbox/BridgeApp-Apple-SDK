@@ -56,3 +56,6 @@ public extension RSDCollectionResult {  // RSDAnswerResultFinder
 
 extension RSDCollectionResultObject : RSDCollectionResult {
 }
+
+extension CollectionResultObject : RSDCollectionResult {
+}

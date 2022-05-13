@@ -214,7 +214,7 @@ extension RSDAnswerResultType {
             return AnswerTypeMeasurement(unit: unit)
         }
         else if self.baseType == .date {
-            return AnswerTypeDateTime(codingFormat: self.dateFormat)
+            return self.dateFormat.map { AnswerTypeDateTime(codingFormat: $0) } ?? AnswerTypeDateTime()
         }
         else {
             return self.baseType.jsonType.answerType
