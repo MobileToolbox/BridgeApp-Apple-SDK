@@ -82,7 +82,7 @@ extension SBBSurveyElement : RSDUIStep {
     }
     
     public func instantiateStepResult() -> ResultData {
-        SBASurveyConfiguration.shared.instantiateStepResult(for: self) ?? RSDResultObject(identifier: self.identifier)
+        SBASurveyConfiguration.shared.instantiateStepResult(for: self) ?? ResultObject(identifier: self.identifier)
     }
     
     fileprivate func parseNewLine(_ string: String?) -> String? {

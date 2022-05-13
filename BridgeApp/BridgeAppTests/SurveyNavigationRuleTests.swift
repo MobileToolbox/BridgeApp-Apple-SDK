@@ -84,8 +84,8 @@ class SurveyNavigationRuleTests: XCTestCase {
         constraints.addRulesObject(ruleNo)
         
         let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .boolean)
-        var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
-        var taskResult = RSDTaskResultObject(identifier: "test")
+        let stepResult = CollectionResultObject(identifier: inputStep.identifier)
+        let taskResult = RSDTaskResultObject(identifier: "test")
         
         // Set the answer to "yes"
         answerResult.value = true
@@ -142,8 +142,8 @@ class SurveyNavigationRuleTests: XCTestCase {
         constraints.addRulesObject(ruleNo)
         
         let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .string)
-        var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
-        var taskResult = RSDTaskResultObject(identifier: "test")
+        let stepResult = CollectionResultObject(identifier: inputStep.identifier)
+        let taskResult = RSDTaskResultObject(identifier: "test")
         
         // Set the answer to "yes"
         answerResult.value = "true"
@@ -230,8 +230,8 @@ class SurveyNavigationRuleTests: XCTestCase {
         constraints.addRulesObject(rule)
         
         let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .integer)
-        var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
-        var taskResult = RSDTaskResultObject(identifier: "test")
+        let stepResult = CollectionResultObject(identifier: inputStep.identifier)
+        let taskResult = RSDTaskResultObject(identifier: "test")
         
         // Set the answer to invalid
         answerResult.value = 0
@@ -264,8 +264,8 @@ class SurveyNavigationRuleTests: XCTestCase {
         constraints.addRulesObject(rule)
         
         let answerResult = RSDAnswerResultObject(identifier: inputStep.identifier, answerType: .integer)
-        var stepResult = RSDCollectionResultObject(identifier: inputStep.identifier)
-        var taskResult = RSDTaskResultObject(identifier: "test")
+        let stepResult = CollectionResultObject(identifier: inputStep.identifier)
+        let taskResult = RSDTaskResultObject(identifier: "test")
         
         // Set the answer to invalid
         answerResult.value = 1

@@ -75,7 +75,7 @@ open class SBASurveyConfiguration {
     /// By default, this will return an instance of `RSDResultObject` for an instruction step
     /// and `RSDCollectionResultObject` for a form step.
     open func instantiateStepResult(for step: SBBSurveyElement) -> ResultData? {
-        return step is SBBSurveyInfoScreen ? RSDResultObject(identifier: step.identifier) : RSDCollectionResultObject(identifier: step.identifier)
+        return step is SBBSurveyInfoScreen ? ResultObject(identifier: step.identifier) : CollectionResultObject(identifier: step.identifier)
     }
     
     /// Is the input field optional? Default = `true`.

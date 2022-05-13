@@ -205,7 +205,7 @@ open class RSDFormUIStepObject : RSDUIStepObject, RSDFormUIStep, RSDSurveyNaviga
     /// `RSDCollectionResultObject`.
     /// - returns: A result for this step.
     open override func instantiateStepResult() -> ResultData {
-        return RSDCollectionResultObject(identifier: self.identifier)
+        CollectionResultObject(identifier: self.identifier)
     }
 
     /// Validate the step to check for any configuration that should throw an error. This class will
